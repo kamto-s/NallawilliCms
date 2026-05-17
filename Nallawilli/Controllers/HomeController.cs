@@ -2,7 +2,7 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Nallawilli.Models;
 
-namespace Nallawilli.Controllers.Public
+namespace Nallawilli.Controllers
 {
     public class HomeController : Controller
     {

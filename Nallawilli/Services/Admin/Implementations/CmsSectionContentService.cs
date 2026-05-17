@@ -4,7 +4,7 @@ using Nallawilli.Helpers;
 using Nallawilli.Models.Entities;
 using Nallawilli.Services.Interfaces;
 
-namespace Nallawilli.Services.Implementations
+namespace Nallawilli.Services.Admin.Implementations
 {
     public class CmsSectionContentService : ICmsSectionContentService
     {

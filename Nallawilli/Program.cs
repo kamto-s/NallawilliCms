@@ -2,18 +2,13 @@ using Microsoft.EntityFrameworkCore;
 using Nallawilli.Data;
 using Microsoft.AspNetCore.Identity;
 using Nallawilli.Options;
-using Nallawilli.Services.Implementations;
 using Nallawilli.Services.Interfaces;
+using Nallawilli.Services.Admin.Implementations;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews()
-    .AddRazorOptions(options =>
-    {
-        options.ViewLocationFormats.Insert(0, "/Views/Public/{1}/{0}.cshtml");
-        options.ViewLocationFormats.Insert(1, "/Views/Public/Shared/{0}.cshtml");
-    });
+builder.Services.AddControllersWithViews();
 
 builder.Services.AddRazorPages();
 

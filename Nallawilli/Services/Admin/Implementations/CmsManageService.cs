@@ -4,7 +4,7 @@ using Nallawilli.Data;
 using Nallawilli.Helpers;
 using Nallawilli.Services.Interfaces;
 
-namespace Nallawilli.Services.Implementations
+namespace Nallawilli.Services.Admin.Implementations
 {
     public class CmsManageService : ICmsManageService
     {
