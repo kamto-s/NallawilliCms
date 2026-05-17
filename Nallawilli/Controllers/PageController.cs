@@ -10,7 +10,7 @@ namespace Nallawilli.Controllers
     public class PageController : Controller
     {
         private readonly ICmsPublicService _cmsPublic;
-
+        
         public PageController(ICmsPublicService cmsPublic)
         {
             _cmsPublic = cmsPublic;

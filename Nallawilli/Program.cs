@@ -62,7 +62,7 @@ app.MapControllerRoute(
 
 app.MapControllerRoute(
     name: "cms-page",
-    pattern: "page/{slug}",
+    pattern: "p/{slug}",
     defaults: new { controller = "Page", action = "Page" });
 
 app.MapControllerRoute(

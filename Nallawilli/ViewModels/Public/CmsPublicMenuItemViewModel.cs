@@ -13,6 +13,6 @@ namespace Nallawilli.ViewModels.Public
         public bool IsHome =>
             string.Equals(Slug, CmsPublicDefaults.HomePageSlug, StringComparison.OrdinalIgnoreCase);
 
-        public string Url => IsHome ? "/" : $"/page/{Slug}";
+        public string Url => CmsPublicDefaults.GetPageUrl(Slug);
     }
 }
