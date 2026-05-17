@@ -21,7 +21,6 @@
   <ItemGroup>
     <Folder Include="Areas\Admin\ViewModels\" />
     <Folder Include="Models\DTOs\" />
-    <Folder Include="Models\ViewModels\Public\" />
     <Folder Include="wwwroot\assets\public\css\pages\" />
     <Folder Include="wwwroot\assets\public\js\pages\" />
   </ItemGroup>

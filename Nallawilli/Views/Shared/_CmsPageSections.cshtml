@@ -1,5 +1,30 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@model CmsPublicPageViewModel
+@using Nallawilli.Helpers
+@using Nallawilli.ViewModels
+@inject Microsoft.AspNetCore.Mvc.ViewEngines.ICompositeViewEngine ViewEngine
+
+@if (Model.Sections.Count == 0)
+{
+    <div class="container py-5">
+        <p class="text-muted mb-0">
+            Page <strong>@Model.Title</strong> (<code>@Model.Slug</code>) has no active sections.
+        </p>
+    </div>
+}
+else
+{
+    var actionContext = new Microsoft.AspNetCore.Mvc.ActionContext(
+        ViewContext.HttpContext,
+        ViewContext.RouteData,
+        ViewContext.ActionDescriptor!);
+
+    @foreach (var sec in Model.Sections)
+    {
+        var partialPath = CmsSectionViewLocations.GetPartialPath(sec.SectionCode);
+        var viewResult = ViewEngine.GetView(executingFilePath: null, viewPath: partialPath, isMainPage: false);
+        if (!viewResult.Success)
+            continue;
+
+        @await Html.PartialAsync(partialPath, sec)
+    }
 }

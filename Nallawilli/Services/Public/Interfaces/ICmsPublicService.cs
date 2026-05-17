@@ -1,6 +1,9 @@
-﻿namespace Nallawilli.Services.Public.Interfaces
+﻿using Nallawilli.ViewModels;
+
+namespace Nallawilli.Services.Public.Interfaces
 {
-    public class ICmsPublicService
+    public interface ICmsPublicService
     {
+        Task<CmsPublicPageViewModel?> GetPageBySlugAsync(string slug, CancellationToken cancellationToken = default);
     }
 }

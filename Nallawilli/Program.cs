@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Identity;
 using Nallawilli.Options;
 using Nallawilli.Services.Interfaces;
 using Nallawilli.Services.Admin.Implementations;
+using Nallawilli.Services.Public.Interfaces;
+using Nallawilli.Services.Public.Implementations;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +25,7 @@ builder.Services.AddScoped<ICmsPageService, CmsPageService>();
 builder.Services.AddScoped<ICmsSectionService, CmsSectionService>();
 builder.Services.AddScoped<ICmsSectionContentService, CmsSectionContentService>();
 builder.Services.AddScoped<ICmsManageService, CmsManageService>();
+builder.Services.AddScoped<ICmsPublicService, CmsPublicService>();
 builder.Services.Configure<CmsAdminOptions>(
     builder.Configuration.GetSection(CmsAdminOptions.SectionName));
 

@@ -1,7 +1,29 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@using Nallawilli.ViewModels
+@model CmsPublicSectionViewModel
+
 @{
+    var title = Model.Get("title");
+    var subtitle = Model.Get("subtitle");
+    var image = Model.Get("image");
+    var description = Model.Get("description");
 }
 
-<h1>_our_story.cshtml</h1>
+@if (!string.IsNullOrWhiteSpace(title))
+{
+    <h4>ini title: @title</h4>
+}
+
+@if (!string.IsNullOrWhiteSpace(subtitle))
+{
+    <h4>ini subtitle: @subtitle</h4>
+}
+
+@if (!string.IsNullOrWhiteSpace(image))
+{
+    <img src="@image" alt="@Model.Get("title")">
+}
+
+@if (!string.IsNullOrWhiteSpace(description))
+{
+    @Html.Raw(description)
+}
