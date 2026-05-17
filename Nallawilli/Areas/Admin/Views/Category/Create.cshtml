@@ -1,0 +1,32 @@
+@model CategoryFormViewModel
+@{
+    ViewData["Title"] = "New category";
+}
+
+<div class="breadcrumb mb-24">
+    <ul class="flex-align gap-4">
+        <li><a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" class="text-gray-200 fw-normal text-15 hover-text-main-600">Dashboard</a></li>
+        <li><span class="text-gray-500 fw-normal d-flex"><i class="ph ph-caret-right"></i></span></li>
+        <li><a asp-area="Admin" asp-controller="Category" asp-action="Index" class="text-gray-200 fw-normal text-15 hover-text-main-600">Categories</a></li>
+        <li><span class="text-gray-500 fw-normal d-flex"><i class="ph ph-caret-right"></i></span></li>
+        <li><span class="text-main-600 fw-normal text-15">New</span></li>
+    </ul>
+</div>
+
+<div class="card mt-24">
+    <div class="card-body">
+        <h4 class="mb-20">New category</h4>
+
+        <form asp-area="Admin" asp-controller="Category" asp-action="Create" method="post" class="mt-16">
+            <partial name="_CategoryForm" model="Model" />
+            <div class="flex-align gap-12 mt-24">
+                <button type="submit" class="btn btn-main rounded-pill px-24">Save</button>
+                <a asp-area="Admin" asp-controller="Category" asp-action="Index" class="btn border border-gray-200 text-gray-600 rounded-pill px-24 hover-border-main-600 hover-text-main-600">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

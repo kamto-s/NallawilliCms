@@ -1,0 +1,54 @@
+@model Nallawilli.Models.Entities.Category
+@using System.Text.Json
+@{
+    ViewData["Title"] = "Delete category";
+    var hasPosts = ViewBag.HasPosts as bool? ?? false;
+    var flashError = TempData["Error"] as string;
+    var deletePageJson = JsonSerializer.Serialize(
+        new { flashError, hasPosts, categoryName = Model.Name },
+        new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
+}
+
+<div class="breadcrumb mb-24">
+    <ul class="flex-align gap-4">
+        <li><a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" class="text-gray-200 fw-normal text-15 hover-text-main-600">Dashboard</a></li>
+        <li><span class="text-gray-500 fw-normal d-flex"><i class="ph ph-caret-right"></i></span></li>
+        <li><a asp-area="Admin" asp-controller="Category" asp-action="Index" class="text-gray-200 fw-normal text-15 hover-text-main-600">Categories</a></li>
+        <li><span class="text-gray-500 fw-normal d-flex"><i class="ph ph-caret-right"></i></span></li>
+        <li><span class="text-main-600 fw-normal text-15">Delete</span></li>
+    </ul>
+</div>
+
+<div class="card mt-24">
+    <div class="card-body">
+        <h4 class="mb-12">Delete category</h4>
+        <p class="text-gray-600 mb-20">This action will archive the category (soft delete). It will no longer appear in lists.</p>
+
+        <dl class="row mb-24">
+            <dt class="col-sm-3 text-gray-600">Name</dt>
+            <dd class="col-sm-9 fw-medium">@Model.Name</dd>
+            <dt class="col-sm-3 text-gray-600">Slug</dt>
+            <dd class="col-sm-9"><code class="text-main-600">@Model.Slug</code></dd>
+        </dl>
+
+        @if (hasPosts)
+        {
+            <p class="text-gray-600 text-14 mb-16">This category is still in use by one or more posts. Remove or reassign those posts first.</p>
+            <a asp-area="Admin" asp-controller="Category" asp-action="Index" class="btn border border-gray-200 text-gray-600 rounded-pill px-24 hover-border-main-600 hover-text-main-600">Back to list</a>
+        }
+        else
+        {
+            <form id="category-delete-confirm-form" asp-area="Admin" asp-controller="Category" asp-action="Delete" asp-route-id="@Model.Id" method="post" class="flex-align gap-12">
+                @Html.AntiForgeryToken()
+                <button type="button" id="btn-delete-category-confirm" class="btn btn-danger rounded-pill px-24">Delete</button>
+                <a asp-area="Admin" asp-controller="Category" asp-action="Index" class="btn border border-gray-200 text-gray-600 rounded-pill px-24 hover-border-main-600 hover-text-main-600">Cancel</a>
+            </form>
+        }
+    </div>
+</div>
+
+<script type="application/json" id="category-delete-page-data">@Html.Raw(deletePageJson)</script>
+
+@section Scripts {
+    <script src="~/assets/admin/js/category/delete-page.js" asp-append-version="true"></script>
+}

@@ -1,0 +1,59 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Title: set ViewData["Title"] in each view (e.g. Dashboard, Categories) -->
+    <title>@(string.IsNullOrWhiteSpace(ViewData["Title"]?.ToString()) ? "Nallawilli" : $"{ViewData["Title"]} - Nallawilli")</title>
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="~/assets/admin/images/logo/logo-dummy.svg">
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="~/assets/admin/css/bootstrap.min.css">
+    <!-- Main theme (admin shell) -->
+    <link rel="stylesheet" href="~/assets/admin/css/main.css">
+    <link rel="stylesheet" href="~/assets/admin/css/components/admin-breadcrumb.css" asp-append-version="true" />
+    <!-- SweetAlert2 (shared admin feedback / confirms) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <link rel="stylesheet" href="~/assets/admin/css/utilities/admin-swal-overrides.css" asp-append-version="true" />
+</head>
+<body>
+    <div class="preloader">
+        <div class="loader"></div>
+    </div>
+
+    <div class="side-overlay"></div>
+
+    <partial name="_Sidebar" />
+
+    <div class="dashboard-main-wrapper">
+        <partial name="_Topbar" />
+
+        <div class="dashboard-body">
+
+            @RenderBody()
+
+        </div>
+
+        <partial name="_Footer" />
+
+    </div>
+
+    <!-- Jquery js -->
+    <script src="~/assets/admin/js/jquery-3.7.1.min.js"></script>
+    <!-- Bootstrap Bundle Js -->
+    <script src="~/assets/admin/js/boostrap.bundle.min.js"></script>
+    <!-- Phosphor Js -->
+    <script src="~/assets/admin/js/phosphor-icon.js"></script>
+
+    <!-- main js -->
+    <script src="~/assets/admin/js/main.js"></script>
+    <!-- SweetAlert2 + admin helpers (before page Scripts) -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    <script src="~/assets/admin/js/utilities/admin-swal-alert.js"></script>
+
+    @await RenderSectionAsync("DashboardScripts", required: false)
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

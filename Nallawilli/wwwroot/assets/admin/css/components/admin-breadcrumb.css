@@ -1,0 +1,18 @@
+/* Admin breadcrumb: keep all crumbs on one horizontal line (flex row + centered items). */
+.breadcrumb > ul {
+    list-style: none;
+    padding-left: 0;
+    margin-bottom: 0;
+}
+
+.breadcrumb > ul > li {
+    display: flex;
+    align-items: center;
+    line-height: 1.35;
+}
+
+/* Phosphor caret used as separator — avoid icon box shifting text baseline */
+.breadcrumb > ul > li .ph {
+    display: block;
+    line-height: 1;
+}

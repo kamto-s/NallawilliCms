@@ -1,0 +1,132 @@
+@model CmsContentFieldViewModel
+@using Nallawilli.Helpers
+
+@{
+    var prefix = ViewData["FieldPrefix"] as string ?? string.Empty;
+    var fieldId = string.IsNullOrEmpty(prefix)
+        ? $"field_{Model.ContentId:N}"
+        : prefix.Replace(".", "_").Replace("[", "_").Replace("]", "_");
+    var isBool = string.Equals(Model.InputType, CmsInputTypes.Boolean, StringComparison.OrdinalIgnoreCase);
+    var isImage = string.Equals(Model.InputType, CmsInputTypes.Image, StringComparison.OrdinalIgnoreCase);
+    var isRichText = string.Equals(Model.InputType, CmsInputTypes.RichText, StringComparison.OrdinalIgnoreCase);
+    var isTextArea = string.Equals(Model.InputType, CmsInputTypes.TextArea, StringComparison.OrdinalIgnoreCase);
+    var isNumber = string.Equals(Model.InputType, CmsInputTypes.Number, StringComparison.OrdinalIgnoreCase);
+    var isColor = string.Equals(Model.InputType, CmsInputTypes.Color, StringComparison.OrdinalIgnoreCase);
+    var boolChecked = string.Equals(Model.ContentValue, "true", StringComparison.OrdinalIgnoreCase);
+    var colorValue = isColor ? CmsColorHelper.ResolveValue(Model.ContentValue) : Model.ContentValue;
+    var colorPickerHex = isColor ? CmsColorHelper.ToPickerHex(colorValue) : CmsColorHelper.DefaultColor;
+    var imageFileName = $"imageFile_{Model.ContentId}";
+}
+
+<input type="hidden" name="@(prefix).ContentId" value="@Model.ContentId" />
+<input type="hidden" name="@(prefix).ContentKey" value="@Model.ContentKey" />
+<input type="hidden" name="@(prefix).InputType" value="@Model.InputType" />
+<input type="hidden" name="@(prefix).SortOrder" value="@Model.SortOrder" />
+
+<div class="cms-field-editor mb-20" data-input-type="@Model.InputType">
+    <label class="form-label text-gray-600 text-13 fw-medium d-flex align-items-center gap-8">
+        <code class="text-main-600">@Model.ContentKey</code>
+        <span class="badge bg-gray-100 text-gray-600 fw-normal">@Model.InputType</span>
+    </label>
+
+    @if (isBool)
+    {
+        <input type="hidden" name="@(prefix).ContentValue" value="false" />
+        <div class="form-check">
+            <input type="checkbox"
+                   class="form-check-input"
+                   id="@fieldId"
+                   name="@(prefix).ContentValue"
+                   value="true"
+                   @(boolChecked ? "checked" : null) />
+            <label class="form-check-label text-gray-600" for="@fieldId">Enabled</label>
+        </div>
+    }
+    else if (isImage)
+    {
+        <input type="hidden"
+               id="@(fieldId)_value"
+               name="@(prefix).ContentValue"
+               value="@Model.ContentValue"
+               class="cms-image-value-input" />
+        <input type="file"
+               class="form-control cms-image-file-input"
+               name="@imageFileName"
+               accept=".jpg,.jpeg,.png,.gif,.webp,image/*" />
+        <p class="text-gray-500 text-12 mt-8 mb-0">JPG, PNG, GIF, WebP — max 5 MB. Leave the file empty to keep the current image.</p>
+        @if (!string.IsNullOrEmpty(Model.ContentValue))
+        {
+            <div class="cms-image-preview mt-12">
+                <img src="@Model.ContentValue" alt="@Model.ContentKey" class="cms-image-preview__img" />
+                <p class="text-gray-500 text-12 mt-8 mb-0"><code>@Model.ContentValue</code></p>
+            </div>
+        }
+    }
+    else if (isRichText)
+    {
+        <div class="cms-quill-wrap rounded-8 border border-gray-200 overflow-hidden bg-white">
+            <div class="cms-quill-host" id="@(fieldId)_quill" data-textarea-id="@fieldId"></div>
+        </div>
+        <textarea id="@fieldId"
+                  name="@(prefix).ContentValue"
+                  class="d-none cms-richtext-source">@Model.ContentValue</textarea>
+    }
+    else if (isTextArea)
+    {
+        <textarea class="form-control"
+                  id="@fieldId"
+                  name="@(prefix).ContentValue"
+                  rows="4">@Model.ContentValue</textarea>
+    }
+    else if (isNumber)
+    {
+        <input type="number"
+               class="form-control"
+               id="@fieldId"
+               name="@(prefix).ContentValue"
+               value="@Model.ContentValue" />
+    }
+    else if (isColor)
+    {
+        <div class="cms-color-field">
+            <input type="color"
+                   class="cms-color-picker"
+                   id="@(fieldId)_picker"
+                   value="@colorPickerHex"
+                   tabindex="-1"
+                   aria-hidden="true" />
+            <div class="cms-color-field__row flex-align gap-12">
+                <button type="button"
+                        class="cms-color-swatch-btn"
+                        id="@(fieldId)_swatch_btn"
+                        title="Open color picker (optional)">
+                    <span class="cms-color-swatch"
+                          id="@(fieldId)_swatch"
+                          style="background-color: @colorPickerHex"></span>
+                </button>
+                <div class="flex-grow-1">
+                    <label class="form-label text-gray-500 text-12 mb-4" for="@fieldId">Hex code</label>
+                    <input type="text"
+                           class="form-control cms-color-text font-monospace"
+                           id="@fieldId"
+                           name="@(prefix).ContentValue"
+                           value="@colorValue"
+                           placeholder="@CmsColorHelper.DefaultColor"
+                           autocomplete="off"
+                           spellcheck="false"
+                           inputmode="text" />
+                </div>
+            </div>
+        </div>
+        <p class="text-gray-500 text-12 mt-8 mb-0">Paste or type <code>#55b345</code> (or <code>55b345</code>). Empty uses default <code>@CmsColorHelper.DefaultColor</code>.</p>
+    }
+    else
+    {
+        <input type="text"
+               class="form-control"
+               id="@fieldId"
+               name="@(prefix).ContentValue"
+               value="@Model.ContentValue"
+               placeholder="@(Model.InputType == CmsInputTypes.Url ? "https:// or /path" : null)" />
+    }
+</div>

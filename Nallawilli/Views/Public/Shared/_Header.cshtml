@@ -1,0 +1,43 @@
+﻿@using Microsoft.AspNetCore.Identity
+
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+<header id="header" class="header d-flex align-items-center sticky-top">
+    <div class="container position-relative d-flex align-items-center">
+
+        <a href="index.html" class="d-flex align-items-center me-auto">
+            <img src="~/assets/public/img/logo.png" alt="Logo" style="height:64px !important;">
+        </a>
+
+        <nav id="navmenu" class="navmenu">
+            <ul>
+                <li><a href="#hero" class="active">HOME</a></li>
+                <li><a href="services.html">OUR STORY</a></li>
+                <li><a href="portfolio.html">WHY WE DO IT</a></li>
+                <li><a href="pricing.html">HOW WE DO IT</a></li>
+                <li><a href="blog.html">CONTACT US</a></li>
+
+                @if (SignInManager.IsSignedIn(User))
+                {
+                    <li>
+                        <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">
+                            <i class="bi bi-person-circle"></i>
+                        </a>
+                    </li>
+                }
+                else
+                {
+                    <li>
+                        <a class="nav-link text-dark" id="register" asp-area="Identity" asp-page="/Account/Register">Register</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" id="login" asp-area="Identity" asp-page="/Account/Login">Login</a>
+                    </li>
+                }
+
+            </ul>
+            <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+        </nav>
+    </div>
+</header>

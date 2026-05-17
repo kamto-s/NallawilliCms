@@ -1,0 +1,42 @@
+@model CmsPageFormViewModel
+
+<div asp-validation-summary="ModelOnly" class="text-danger mb-16"></div>
+
+<div class="row gy-3">
+    <div class="col-12">
+        <label asp-for="Title" class="form-label text-gray-600 text-13 fw-medium"></label>
+        <input asp-for="Title" class="form-control" autocomplete="off" />
+        <span asp-validation-for="Title" class="text-danger text-12"></span>
+        @if (!string.IsNullOrEmpty(Model.Slug))
+        {
+            <p class="text-gray-500 text-12 mt-8 mb-0">URL slug: <code>@Model.Slug</code> (generated from title on save)</p>
+        }
+    </div>
+    <div class="col-md-4">
+        <div class="form-check mt-8">
+            <input asp-for="IsActive" class="form-check-input" />
+            <label asp-for="IsActive" class="form-check-label text-gray-600 text-13"></label>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="form-check mt-8">
+            <input asp-for="ShowInMenu" class="form-check-input" />
+            <label asp-for="ShowInMenu" class="form-check-label text-gray-600 text-13"></label>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <label asp-for="SortOrder" class="form-label text-gray-600 text-13 fw-medium"></label>
+        <input asp-for="SortOrder" class="form-control" type="number" />
+        <span asp-validation-for="SortOrder" class="text-danger text-12"></span>
+    </div>
+    <div class="col-12">
+        <label asp-for="MetaTitle" class="form-label text-gray-600 text-13 fw-medium"></label>
+        <input asp-for="MetaTitle" class="form-control" autocomplete="off" />
+        <span asp-validation-for="MetaTitle" class="text-danger text-12"></span>
+    </div>
+    <div class="col-12">
+        <label asp-for="MetaDescription" class="form-label text-gray-600 text-13 fw-medium"></label>
+        <textarea asp-for="MetaDescription" class="form-control" rows="3"></textarea>
+        <span asp-validation-for="MetaDescription" class="text-danger text-12"></span>
+    </div>
+</div>

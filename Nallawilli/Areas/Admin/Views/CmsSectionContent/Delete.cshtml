@@ -1,0 +1,22 @@
+@model Nallawilli.Models.Entities.CmsSectionContent
+@{
+    ViewData["Title"] = "Delete content";
+    var sectionId = (Guid)ViewBag.SectionId!;
+}
+
+<div class="card mt-24">
+    <div class="card-body">
+        <h4 class="mb-12">Delete content</h4>
+        <dl class="row mb-24">
+            <dt class="col-sm-3">Key</dt>
+            <dd class="col-sm-9"><code>@Model.ContentKey</code></dd>
+            <dt class="col-sm-3">Type</dt>
+            <dd class="col-sm-9">@Model.InputType</dd>
+        </dl>
+        <form asp-action="Delete" asp-route-id="@Model.Id" method="post" class="flex-align gap-12">
+            @Html.AntiForgeryToken()
+            <button type="submit" class="btn btn-danger rounded-pill px-24">Delete</button>
+            <a asp-action="Index" asp-route-sectionId="@sectionId" class="btn border border-gray-200 text-gray-600 rounded-pill px-24">Cancel</a>
+        </form>
+    </div>
+</div>

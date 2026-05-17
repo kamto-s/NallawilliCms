@@ -1,0 +1,18 @@
+/* Scoped fixes for CMS page create/edit (theme .form-check + narrow columns). */
+.cmspage-form .form-check .form-check-label {
+    width: auto;
+    max-width: 100%;
+    white-space: nowrap;
+}
+
+.cmspage-form .form-check {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: 0;
+}
+
+#cmspage-quill-meta-description .ql-editor {
+    min-height: 160px;
+}

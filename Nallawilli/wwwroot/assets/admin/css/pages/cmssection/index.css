@@ -1,0 +1,18 @@
+.cmssection-card-grid {
+    margin-bottom: 0;
+}
+
+.cmssection-card {
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.cmssection-card:hover {
+    border-color: #c4d4f0 !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+}
+
+.cmssection-card__type,
+.cmssection-card__name,
+.cmssection-card__display-title {
+    min-width: 0;
+}

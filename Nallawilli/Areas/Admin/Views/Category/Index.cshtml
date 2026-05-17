@@ -1,0 +1,81 @@
+﻿@model IEnumerable<Nallawilli.Models.Entities.Category>
+@using System.Text.Json
+
+@{
+    ViewData["Title"] = "Categories";
+    var flashSuccess = TempData["Success"] as string;
+    var flashError = TempData["Error"] as string;
+    var indexPageJson = JsonSerializer.Serialize(
+        new { flashSuccess, flashError },
+        new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
+}
+
+<link rel="stylesheet" href="~/assets/admin/css/dataTables.dataTables.min.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/assets/admin/css/pages/category/index.css" asp-append-version="true" />
+
+<div class="breadcrumb mb-24">
+    <ul class="flex-align gap-4">
+        <li><a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" class="text-gray-200 fw-normal text-15 hover-text-main-600">Dashboard</a></li>
+        <li> <span class="text-gray-500 fw-normal d-flex"><i class="ph ph-caret-right"></i></span> </li>
+        <li><span class="text-main-600 fw-normal text-15">Categories</span></li>
+    </ul>
+</div>
+
+<div class="card mt-24">
+    <div class="card-body">
+        <div class="flex-between flex-wrap gap-12 mb-30">
+            <h4 class="mb-0">Categories</h4>
+            <a asp-area="Admin" asp-controller="Category" asp-action="Create" class="btn btn-main text-sm btn-sm px-24 rounded-pill py-12 d-flex align-items-center gap-2">
+                <i class="ph ph-plus me-4"></i> New category
+            </a>
+        </div>
+
+        <div class="table-responsive">
+            <table id="categoriesTable" class="table table-hover align-middle w-100">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Created</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="categories-name-cell">
+                                <span class="categories-name-text" title="@item.Name">@item.Name</span>
+                            </td>
+                            <td class="categories-desc-cell">
+                                <span class="categories-desc-text" title="@(item.Description ?? "")">@(item.Description ?? "—")</span>
+                            </td>
+                            <td data-order="@(item.CreatedAt?.ToString("o") ?? "")">@(item.CreatedAt?.ToLocalTime().ToString("dd MMM yyyy, HH:mm") ?? "—")</td>
+                            <td class="text-end text-nowrap">
+                                <a asp-area="Admin" asp-controller="Category" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning rounded-8 px-10 py-6" title="Edit">
+                                    <i class="ph ph-pencil-simple"></i>
+                                </a>
+                                <button type="button" class="btn btn-sm btn-danger rounded-8 px-10 py-6 btn-category-delete" title="Delete" data-id="@item.Id">
+                                    <i class="ph ph-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+<form id="category-delete-form" asp-area="Admin" asp-controller="Category" asp-action="Delete" method="post" class="d-none">
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="id" id="category-delete-id" value="" />
+</form>
+
+<script type="application/json" id="category-index-page-data">@Html.Raw(indexPageJson)</script>
+
+@section Scripts {
+    <script src="~/assets/admin/js/dataTables.min.js" asp-append-version="true"></script>
+    <script src="~/assets/admin/js/pages/category/index.js" asp-append-version="true"></script>
+}

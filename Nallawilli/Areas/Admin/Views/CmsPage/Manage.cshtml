@@ -1,0 +1,132 @@
+@model CmsPageManageViewModel
+@using System.Text.Json
+
+@{
+    ViewData["Title"] = "Manage content";
+    var showStructure = ViewBag.ShowPageStructureTools as bool? ?? true;
+    var flashSuccess = TempData["Success"] as string;
+    var pageDataJson = JsonSerializer.Serialize(
+        new { flashSuccess },
+        new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
+}
+
+<link rel="stylesheet" href="~/assets/admin/css/editor-quill.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/assets/admin/css/pages/cms/manage.css" asp-append-version="true" />
+
+<div class="breadcrumb mb-24">
+    <ul class="flex-align gap-4">
+        <li><a asp-area="Admin" asp-controller="CmsPage" asp-action="Index" class="text-gray-200 fw-normal text-15 hover-text-main-600">Pages</a></li>
+        <li><span class="text-gray-500 fw-normal d-flex"><i class="ph ph-caret-right"></i></span></li>
+        <li><span class="text-main-600 fw-normal text-15">@Model.PageTitle</span></li>
+    </ul>
+</div>
+
+<div class="card mt-24">
+    <div class="card-body">
+        <div class="flex-between flex-wrap gap-12 mb-24">
+            <div>
+                <h4 class="mb-8">Manage page content</h4>
+                <p class="text-gray-500 text-14 mb-0">
+                    <strong>@Model.PageTitle</strong>
+                    · <code>@Model.PageSlug</code>
+                    · @(Model.IsActive ? "Active" : "Inactive")
+                </p>
+            </div>
+            <div class="flex-align gap-8 flex-wrap">
+                <a asp-area="Admin" asp-controller="CmsPage" asp-action="Index" class="btn border border-gray-200 text-gray-600 btn-sm rounded-pill px-20">All pages</a>
+                @if (showStructure)
+                {
+                    <a asp-area="Admin" asp-controller="CmsPage" asp-action="Edit" asp-route-id="@Model.PageId" class="btn border border-gray-200 text-gray-600 btn-sm rounded-pill px-20">
+                        <i class="ph ph-gear me-4"></i> Page settings
+                    </a>
+                    <a asp-area="Admin" asp-controller="CmsSection" asp-action="Index" asp-route-pageId="@Model.PageId" class="btn border border-gray-200 text-gray-600 btn-sm rounded-pill px-20">
+                        <i class="ph ph-squares-four me-4"></i> Page structure
+                    </a>
+                }
+            </div>
+        </div>
+
+        <form id="cms-manage-form"
+              asp-area="Admin"
+              asp-controller="CmsPage"
+              asp-action="Manage"
+              asp-route-id="@Model.PageId"
+              method="post"
+              enctype="multipart/form-data">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="PageId" />
+            <input type="hidden" asp-for="PageTitle" />
+            <input type="hidden" asp-for="PageSlug" />
+            <input type="hidden" asp-for="IsActive" />
+
+            <div asp-validation-summary="All" class="text-danger mb-16"></div>
+
+            @if (Model.Sections.Count == 0)
+            {
+                <div class="alert alert-warning mb-0">
+                    No sections yet.
+                    @if (showStructure)
+                    {
+                        <a asp-area="Admin" asp-controller="CmsSection" asp-action="Index" asp-route-pageId="@Model.PageId">Add sections and content keys</a>
+                    }
+                </div>
+            }
+            else
+            {
+                @for (var si = 0; si < Model.Sections.Count; si++)
+                {
+                    var sec = Model.Sections[si];
+                    var collapseId = $"cms-section-{sec.SectionId:N}";
+                    var expanded = si == 0;
+                    <div class="cms-section-block mb-24 @(sec.IsActive ? "" : "cms-section-block--inactive")">
+                        <button type="button"
+                                class="cms-section-block__head cms-section-block__toggle w-100 d-flex align-items-center justify-content-between gap-12 @(expanded ? "" : "collapsed")"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#@collapseId"
+                                aria-expanded="@(expanded ? "true" : "false")"
+                                aria-controls="@collapseId">
+                            <div class="text-start">
+                                <h5 class="mb-4">@sec.SectionName</h5>
+                                <span class="text-gray-500 text-13"><code>@sec.SectionCode</code></span>
+                                @if (!sec.IsActive)
+                                {
+                                    <span class="badge bg-gray-200 text-gray-600 ms-8">Inactive</span>
+                                }
+                            </div>
+                            <i class="ph ph-caret-down cms-section-chevron flex-shrink-0" aria-hidden="true"></i>
+                        </button>
+                        <div id="@collapseId" class="collapse @(expanded ? "show" : "")">
+                        <div class="cms-section-block__body">
+                            @if (sec.Fields.Count == 0)
+                            {
+                                <p class="text-gray-500 text-14 mb-0">No content fields in this section.</p>
+                            }
+                            else
+                            {
+                                <input type="hidden" name="Sections[@si].SectionId" value="@sec.SectionId" />
+                                <input type="hidden" name="Sections[@si].SectionCode" value="@sec.SectionCode" />
+                                <input type="hidden" name="Sections[@si].SectionName" value="@sec.SectionName" />
+                                <input type="hidden" name="Sections[@si].IsActive" value="@sec.IsActive.ToString().ToLowerInvariant()" />
+
+                                <partial name="_CmsManageSectionFields" model="(si, sec)" />
+                            }
+                        </div>
+                        </div>
+                    </div>
+                }
+
+                <div class="flex-align gap-12 mt-8">
+                    <button type="submit" class="btn btn-main rounded-pill px-24">Save content</button>
+                    <a asp-area="Admin" asp-controller="CmsPage" asp-action="Index" class="btn border border-gray-200 text-gray-600 rounded-pill px-24">Cancel</a>
+                </div>
+            }
+        </form>
+    </div>
+</div>
+
+<script type="application/json" id="cms-manage-page-data">@Html.Raw(pageDataJson)</script>
+
+@section Scripts {
+    <script src="~/assets/admin/js/editor-quill.js" asp-append-version="true"></script>
+    <script src="~/assets/admin/js/pages/cms/manage-page.js" asp-append-version="true"></script>
+}

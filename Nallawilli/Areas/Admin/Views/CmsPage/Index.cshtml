@@ -1,0 +1,120 @@
+@model CmsPageIndexViewModel
+@using System.Text.Json
+
+@{
+    ViewData["Title"] = "Pages";
+    var flashSuccess = TempData["Success"] as string;
+    var flashError = TempData["Error"] as string;
+    var pageDataJson = JsonSerializer.Serialize(
+        new { flashSuccess, flashError },
+        new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
+}
+
+<link rel="stylesheet" href="~/assets/admin/css/dataTables.dataTables.min.css" asp-append-version="true" />
+
+<div class="breadcrumb mb-24">
+    <ul class="flex-align gap-4">
+        <li><a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" class="text-gray-200 fw-normal text-15 hover-text-main-600">Dashboard</a></li>
+        <li><span class="text-gray-500 fw-normal d-flex"><i class="ph ph-caret-right"></i></span></li>
+        <li><span class="text-main-600 fw-normal text-15">Pages</span></li>
+    </ul>
+</div>
+
+@if (Model.ShowPageStructureTools)
+{
+    <div class="alert alert-light border border-gray-200 text-14 mb-16 flex-between flex-wrap gap-8">
+        <span class="text-gray-600">
+            <i class="ph ph-info me-4"></i>
+            <strong>Page structure</strong> — add sections and content keys (master data). Hide this later in <code>appsettings.json</code>.
+        </span>
+    </div>
+}
+
+<div class="card mt-24">
+    <div class="card-body">
+        <div class="flex-between flex-wrap gap-12 mb-30">
+            <h4 class="mb-0">CMS Pages</h4>
+            @if (Model.ShowPageStructureTools)
+            {
+                <div class="flex-align gap-8 flex-wrap">
+                    <a asp-area="Admin" asp-controller="CmsPage" asp-action="Create" class="btn btn-main text-sm btn-sm px-24 rounded-pill py-12 d-flex align-items-center gap-2">
+                        <i class="ph ph-plus me-4"></i> New page
+                    </a>
+                </div>
+            }
+        </div>
+
+        <div class="table-responsive">
+            <table id="cmsPagesTable" class="table table-hover align-middle w-100">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Slug</th>
+                        @if (Model.ShowPageStructureTools)
+                        {
+                            <th>Sections</th>
+                        }
+                        <th>Active</th>
+                        <th>Menu</th>
+                        <th>Sort</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Pages)
+                    {
+                        var sectionCount = Model.SectionCountsByPageId.GetValueOrDefault(item.Id);
+                        <tr>
+                            <td>@item.Title</td>
+                            <td><code class="text-main-600">@item.Slug</code></td>
+                            @if (Model.ShowPageStructureTools)
+                            {
+                                <td>@sectionCount</td>
+                            }
+                            <td>@(item.IsActive ? "Yes" : "No")</td>
+                            <td>@(item.ShowInMenu ? "Yes" : "No")</td>
+                            <td>@item.SortOrder</td>
+                            <td class="text-end text-nowrap">
+                                <a asp-area="Admin" asp-controller="CmsPage" asp-action="Manage" asp-route-id="@item.Id"
+                                   class="btn btn-sm btn-main rounded-8 px-10 py-6" title="Manage content">
+                                    <i class="ph ph-article"></i>
+                                </a>
+                                @if (Model.ShowPageStructureTools)
+                                {
+                                    <a asp-area="Admin" asp-controller="CmsSection" asp-action="Index" asp-route-pageId="@item.Id"
+                                       class="btn btn-sm btn-outline-main rounded-8 px-10 py-6" title="Page structure">
+                                        <i class="ph ph-squares-four"></i>
+                                    </a>
+                                    <a asp-area="Admin" asp-controller="CmsPage" asp-action="Edit" asp-route-id="@item.Id"
+                                       class="btn btn-sm btn-warning rounded-8 px-10 py-6" title="Page settings">
+                                        <i class="ph ph-gear"></i>
+                                    </a>
+                                    <button type="button" class="btn btn-sm btn-danger rounded-8 px-10 py-6 btn-cms-delete" title="Delete"
+                                            data-id="@item.Id" data-name="@item.Title">
+                                        <i class="ph ph-trash"></i>
+                                    </button>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@if (Model.ShowPageStructureTools)
+{
+    <form id="cms-delete-form" asp-area="Admin" asp-controller="CmsPage" asp-action="Delete" method="post" class="d-none">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="id" id="cms-delete-id" value="" />
+    </form>
+}
+
+<script type="application/json" id="cms-page-index-data">@Html.Raw(pageDataJson)</script>
+
+@section Scripts {
+    <script src="~/assets/admin/js/dataTables.min.js" asp-append-version="true"></script>
+    <script src="~/assets/admin/js/pages/cms/cms-list-common.js" asp-append-version="true"></script>
+    <script src="~/assets/admin/js/pages/cms/page-index.js" asp-append-version="true"></script>
+}

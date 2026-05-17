@@ -1,0 +1,68 @@
+@using Nallawilli.Areas.Admin.ViewModels
+@using Nallawilli.Helpers
+@model (int SectionIndex, CmsSectionManageViewModel Section)
+
+@{
+    var si = Model.SectionIndex;
+    var sec = Model.Section;
+    var layout = CmsContentFieldGrouper.BuildLayout(sec.Fields.Select(f => f.ContentKey).ToList());
+    var firstIndexed = layout.HasIndexedGroups ? layout.IndexedGroups[0].Index : (int?)null;
+}
+
+@if (!layout.HasIndexedGroups)
+{
+    @for (var fi = 0; fi < sec.Fields.Count; fi++)
+    {
+        var field = sec.Fields[fi];
+        var fieldPrefix = $"Sections[{si}].Fields[{fi}]";
+        <partial name="_CmsContentFieldEditor"
+                 model="field"
+                 view-data="@(new ViewDataDictionary(ViewData) { { "FieldPrefix", fieldPrefix } })" />
+    }
+}
+else
+{
+    @if (layout.UngroupedFieldIndices.Count > 0)
+    {
+        <div class="cms-field-group cms-field-group--general mb-20">
+            <p class="cms-field-group__label text-gray-500 text-12 fw-medium mb-12">General</p>
+            @foreach (var fi in layout.UngroupedFieldIndices)
+            {
+                var field = sec.Fields[fi];
+                var fieldPrefix = $"Sections[{si}].Fields[{fi}]";
+                <partial name="_CmsContentFieldEditor"
+                         model="field"
+                         view-data="@(new ViewDataDictionary(ViewData) { { "FieldPrefix", fieldPrefix } })" />
+            }
+        </div>
+    }
+
+    @foreach (var grp in layout.IndexedGroups)
+    {
+        var itemCollapseId = $"cms-item-{sec.SectionId:N}-{grp.Index}";
+        var itemExpanded = grp.Index == firstIndexed;
+        <div class="cms-item-group mb-16">
+            <button type="button"
+                    class="cms-item-group__head cms-section-block__toggle w-100 d-flex align-items-center justify-content-between gap-12 @(itemExpanded ? "" : "collapsed")"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#@itemCollapseId"
+                    aria-expanded="@(itemExpanded ? "true" : "false")"
+                    aria-controls="@itemCollapseId">
+                <span class="fw-medium text-14">@grp.Title</span>
+                <i class="ph ph-caret-down cms-section-chevron flex-shrink-0" aria-hidden="true"></i>
+            </button>
+            <div id="@itemCollapseId" class="collapse @(itemExpanded ? "show" : "")">
+                <div class="cms-item-group__body">
+                    @foreach (var fi in grp.FieldIndices)
+                    {
+                        var field = sec.Fields[fi];
+                        var fieldPrefix = $"Sections[{si}].Fields[{fi}]";
+                        <partial name="_CmsContentFieldEditor"
+                                 model="field"
+                                 view-data="@(new ViewDataDictionary(ViewData) { { "FieldPrefix", fieldPrefix } })" />
+                    }
+                </div>
+            </div>
+        </div>
+    }
+}

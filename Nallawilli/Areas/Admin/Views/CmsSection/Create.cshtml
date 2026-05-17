@@ -1,0 +1,29 @@
+@model CmsSectionFormViewModel
+@{ ViewData["Title"] = "New section"; }
+
+<div class="breadcrumb mb-24">
+    <ul class="flex-align gap-4">
+        <li><a asp-controller="CmsPage" asp-action="Index" class="text-gray-200 fw-normal text-15 hover-text-main-600">Pages</a></li>
+        <li><span class="text-gray-500 fw-normal d-flex"><i class="ph ph-caret-right"></i></span></li>
+        <li><a asp-action="Index" asp-route-pageId="@Model.PageId" class="text-gray-200 fw-normal text-15 hover-text-main-600">@Model.PageTitle</a></li>
+        <li><span class="text-gray-500 fw-normal d-flex"><i class="ph ph-caret-right"></i></span></li>
+        <li><span class="text-main-600 fw-normal text-15">New section</span></li>
+    </ul>
+</div>
+
+<div class="card mt-24">
+    <div class="card-body">
+        <h4 class="mb-20">New section</h4>
+        <form asp-area="Admin" asp-controller="CmsSection" asp-action="Create" asp-route-pageId="@Model.PageId" method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="PageId" />
+            <partial name="_CmsSectionForm" model="Model" />
+            <div class="flex-align gap-12 mt-24">
+                <button type="submit" class="btn btn-main rounded-pill px-24">Save</button>
+                <a asp-action="Index" asp-route-pageId="@Model.PageId" class="btn border border-gray-200 text-gray-600 rounded-pill px-24">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

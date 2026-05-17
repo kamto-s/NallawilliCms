@@ -1,0 +1,21 @@
+#categoriesTable td.categories-name-cell {
+    max-width: 14rem;
+}
+
+#categoriesTable td.categories-name-cell .categories-name-text {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+#categoriesTable td.categories-desc-cell {
+    max-width: 22rem;
+}
+
+#categoriesTable td.categories-desc-cell .categories-desc-text {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

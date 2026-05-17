@@ -1,0 +1,38 @@
+@model PostFormViewModel
+@{
+    ViewData["Title"] = "New Post";
+}
+
+<link rel="stylesheet" href="~/assets/admin/css/editor-quill.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/assets/admin/css/pages/post/form.css" asp-append-version="true" />
+
+<div class="breadcrumb mb-24">
+    <ul class="flex-align gap-4">
+        <li><a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" class="text-gray-200 fw-normal text-15 hover-text-main-600">Dashboard</a></li>
+        <li><span class="text-gray-500 fw-normal d-flex"><i class="ph ph-caret-right"></i></span></li>
+        <li><a asp-area="Admin" asp-controller="Post" asp-action="Index" class="text-gray-200 fw-normal text-15 hover-text-main-600">Posts</a></li>
+        <li><span class="text-gray-500 fw-normal d-flex"><i class="ph ph-caret-right"></i></span></li>
+        <li><span class="text-main-600 fw-normal text-15">New</span></li>
+    </ul>
+</div>
+
+<div class="card mt-24">
+    <div class="card-body">
+        <h4 class="mb-20">New Post</h4>
+
+        <form asp-area="Admin" asp-controller="Post" asp-action="Create" method="post" enctype="multipart/form-data" class="mt-16" id="post-form">
+            <partial name="_PostForm" model="Model" />
+            <div class="d-flex align-items-center gap-12 mt-24 justify-content-end">
+                <a asp-area="Admin" asp-controller="Post" asp-action="Index" class="btn border border-gray-200 text-gray-600 rounded-pill px-24 hover-border-main-600 hover-text-main-600">Cancel</a>
+                <button type="submit" class="btn btn-main rounded-pill px-24">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/assets/admin/js/editor-quill.js" asp-append-version="true"></script>
+    <script src="~/assets/admin/js/pages/post/form-publishing.js" asp-append-version="true"></script>
+    <script src="~/assets/admin/js/pages/post/form-quill.js" asp-append-version="true"></script>
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,93 @@
+@model CmsSectionListViewModel
+@using System.Text.Json
+
+@{
+    ViewData["Title"] = "Sections";
+    var cmsPage = Model.Page;
+    var flashSuccess = TempData["Success"] as string;
+    var flashError = TempData["Error"] as string;
+    var pageDataJson = JsonSerializer.Serialize(
+        new { flashSuccess, flashError },
+        new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
+}
+
+<link rel="stylesheet" href="~/assets/admin/css/dataTables.dataTables.min.css" asp-append-version="true" />
+
+<div class="breadcrumb mb-24">
+    <ul class="flex-align gap-4">
+        <li><a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" class="text-gray-200 fw-normal text-15 hover-text-main-600">Dashboard</a></li>
+        <li><span class="text-gray-500 fw-normal d-flex"><i class="ph ph-caret-right"></i></span></li>
+        <li><a asp-controller="CmsPage" asp-action="Index" class="text-gray-200 fw-normal text-15 hover-text-main-600">Pages</a></li>
+        <li><span class="text-gray-500 fw-normal d-flex"><i class="ph ph-caret-right"></i></span></li>
+        <li><span class="text-main-600 fw-normal text-15">@cmsPage.Title — Sections</span></li>
+    </ul>
+</div>
+
+<div class="card mt-24">
+    <div class="card-body">
+        <div class="flex-between flex-wrap gap-12 mb-30">
+            <div>
+                <h4 class="mb-4">Sections</h4>
+                <p class="text-gray-500 text-14 mb-0">Page: <strong>@cmsPage.Title</strong> (<code>@cmsPage.Slug</code>)</p>
+            </div>
+            <div class="flex-align gap-8">
+                <a asp-controller="CmsPage" asp-action="Index" class="btn border border-gray-200 text-gray-600 btn-sm rounded-pill px-20">Back to pages</a>
+                <a asp-action="Create" asp-route-pageId="@cmsPage.Id" class="btn btn-main text-sm btn-sm px-24 rounded-pill py-12">
+                    <i class="ph ph-plus me-4"></i> New section
+                </a>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table id="cmsSectionsTable" class="table table-hover align-middle w-100">
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>Name</th>
+                        <th>Contents</th>
+                        <th>Active</th>
+                        <th>Sort</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Sections)
+                    {
+                        var contentCount = Model.ContentCountsBySectionId.GetValueOrDefault(item.Id);
+                        <tr>
+                            <td><code>@item.SectionCode</code></td>
+                            <td>@item.SectionName</td>
+                            <td>@contentCount</td>
+                            <td>@(item.IsActive ? "Yes" : "No")</td>
+                            <td>@item.SortOrder</td>
+                            <td class="text-end text-nowrap">
+                                <a asp-controller="CmsSectionContent" asp-action="Index" asp-route-sectionId="@item.Id" class="btn btn-sm btn-main rounded-8 px-10 py-6" title="Contents">
+                                    <i class="ph ph-list-bullets"></i>
+                                </a>
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning rounded-8 px-10 py-6" title="Edit">
+                                    <i class="ph ph-pencil-simple"></i>
+                                </a>
+                                <button type="button" class="btn btn-sm btn-danger rounded-8 px-10 py-6 btn-cms-delete" data-id="@item.Id" data-name="@item.SectionName">
+                                    <i class="ph ph-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<form id="cms-delete-form" asp-action="Delete" method="post" class="d-none">
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="id" id="cms-delete-id" />
+</form>
+
+<script type="application/json" id="cms-section-index-data">@Html.Raw(pageDataJson)</script>
+
+@section Scripts {
+    <script src="~/assets/admin/js/dataTables.min.js" asp-append-version="true"></script>
+    <script src="~/assets/admin/js/pages/cms/cms-list-common.js" asp-append-version="true"></script>
+    <script src="~/assets/admin/js/pages/cms/section-index.js" asp-append-version="true"></script>
+}

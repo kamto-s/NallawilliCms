@@ -1,0 +1,34 @@
+@model CmsSectionContentFormViewModel
+@{
+    var inputTypes = ViewBag.InputTypes as IReadOnlyList<string> ?? Nallawilli.Helpers.CmsInputTypes.All;
+}
+
+<div asp-validation-summary="ModelOnly" class="text-danger mb-16"></div>
+
+<div class="row gy-3">
+    <div class="col-md-6">
+        <label asp-for="ContentKey" class="form-label text-gray-600 text-13 fw-medium"></label>
+        <input asp-for="ContentKey" class="form-control" autocomplete="off" placeholder="title" />
+        <span asp-validation-for="ContentKey" class="text-danger text-12"></span>
+    </div>
+    <div class="col-md-6">
+        <label asp-for="InputType" class="form-label text-gray-600 text-13 fw-medium"></label>
+        <select asp-for="InputType" class="form-select">
+            @foreach (var t in inputTypes)
+            {
+                <option value="@t">@t</option>
+            }
+        </select>
+        <span asp-validation-for="InputType" class="text-danger text-12"></span>
+    </div>
+    <div class="col-12">
+        <label asp-for="ContentValue" class="form-label text-gray-600 text-13 fw-medium"></label>
+        <textarea asp-for="ContentValue" class="form-control" rows="5"></textarea>
+        <span asp-validation-for="ContentValue" class="text-danger text-12"></span>
+    </div>
+    <div class="col-md-6">
+        <label asp-for="SortOrder" class="form-label text-gray-600 text-13 fw-medium"></label>
+        <input asp-for="SortOrder" class="form-control" type="number" />
+        <span asp-validation-for="SortOrder" class="text-danger text-12"></span>
+    </div>
+</div>

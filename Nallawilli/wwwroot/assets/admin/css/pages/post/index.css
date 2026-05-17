@@ -1,0 +1,10 @@
+#postsTable td.posts-title-cell {
+    max-width: 17rem;
+}
+
+#postsTable td.posts-title-cell .posts-title-text {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

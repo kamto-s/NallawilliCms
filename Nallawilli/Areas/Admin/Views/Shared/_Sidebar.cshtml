@@ -1,0 +1,112 @@
+﻿<aside class="sidebar">
+    <!-- sidebar close btn -->
+    <button type="button" class="sidebar-close-btn text-gray-500 hover-text-white hover-bg-main-600 text-md w-24 h-24 border border-gray-100 hover-border-main-600 d-xl-none d-flex flex-center rounded-circle position-absolute"><i class="ph ph-x"></i></button>
+    <!-- sidebar close btn -->
+
+    <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" class="sidebar__logo text-center p-20 position-sticky inset-block-start-0 bg-white w-100 z-1 pb-10">
+        <img src="~/assets/admin/images/logo/logo.png" alt="Logo">
+    </a>
+
+    <div class="sidebar-menu-wrapper overflow-y-auto scroll-sm">
+        <div class="p-20 pt-10">
+            <ul class="sidebar-menu">
+
+                @* main *@
+                <li class="sidebar-menu__item">
+                    <span class="text-gray-300 text-sm px-20 pt-20 fw-semibold d-block text-uppercase">Main</span>
+                </li>
+
+                <li class="sidebar-menu__item @(ViewContext.RouteData.Values["controller"]?.ToString() == "Dashboard" ? "activePage" : "")">
+                    <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" class="sidebar-menu__link">
+                        <span class="icon"><i class="ph ph-squares-four"></i></span>
+                        <span class="text">Dashboard</span>
+                    </a>
+                </li>
+
+                @* content *@
+                <li class="sidebar-menu__item">
+                    <span class="text-gray-300 text-sm px-20 pt-20 fw-semibold d-block text-uppercase">Content</span>
+                </li>
+
+                <li class="sidebar-menu__item @(ViewContext.RouteData.Values["controller"]?.ToString() == "Post" ? "activePage" : "")">
+                    <a asp-area="Admin" asp-controller="Post" asp-action="Index" class="sidebar-menu__link">
+                        <span class="icon"><i class="ph ph-article"></i></span>
+                        <span class="text">Posts</span>
+                    </a>
+                </li>
+
+                <li class="sidebar-menu__item @(ViewContext.RouteData.Values["controller"]?.ToString() == "Category" ? "activePage" : "")">
+                    <a asp-area="Admin" asp-controller="Category" asp-action="Index" class="sidebar-menu__link">
+                        <span class="icon"><i class="ph ph-folders"></i></span>
+                        <span class="text">Categories</span>
+                    </a>
+                </li>
+
+              @*   <li class="sidebar-menu__item">
+                    <a href="#" class="sidebar-menu__link">
+                        <span class="icon"><i class="ph ph-images"></i></span>
+                        <span class="text">Gallery</span>
+                    </a>
+                </li>
+
+                <li class="sidebar-menu__item">
+                    <a href="#" class="sidebar-menu__link">
+                        <span class="icon"><i class="ph ph-briefcase"></i></span>
+                        <span class="text">Services</span>
+                    </a>
+                </li> *@
+
+                @{
+                    var cmsCtrl = ViewContext.RouteData.Values["controller"]?.ToString();
+                    var isPageContentTree = cmsCtrl is "CmsPage" or "CmsSection" or "CmsSectionContent";
+                }
+                <li class="sidebar-menu__item @(isPageContentTree ? "activePage" : "")">
+                    <a asp-area="Admin" asp-controller="CmsPage" asp-action="Index" class="sidebar-menu__link">
+                        <span class="icon"><i class="ph ph-stack"></i></span>
+                        <span class="text">Pages</span>
+                    </a>
+                </li>
+
+                @* management *@
+                <li class="sidebar-menu__item">
+                    <span class="text-gray-300 text-sm px-20 pt-20 fw-semibold d-block text-uppercase">Management</span>
+                </li>
+
+                <li class="sidebar-menu__item">
+                    <a href="#" class="sidebar-menu__link">
+                        <span class="icon"><i class="ph ph-users-three"></i></span>
+                        <span class="text">Users</span>
+                    </a>
+                </li>
+
+                <li class="sidebar-menu__item">
+                    <a href="#" class="sidebar-menu__link">
+                        <span class="icon"><i class="ph ph-envelope-simple"></i></span>
+                        <span class="text">Contacts</span>
+                    </a>
+                </li>
+
+                @* System *@
+                <li class="sidebar-menu__item">
+                    <span class="text-gray-300 text-sm px-20 pt-20 fw-semibold d-block text-uppercase">System</span>
+                </li>
+
+                <li class="sidebar-menu__item">
+                    <a href="#" class="sidebar-menu__link">
+                        <span class="icon"><i class="ph ph-gear"></i></span>
+                        <span class="text">Settings</span>
+                    </a>
+                </li>
+
+                <li class="sidebar-menu__item">
+                    <a href="#" class="sidebar-menu__link">
+                        <span class="icon"><i class="ph ph-user-circle"></i></span>
+                        <span class="text">Profile</span>
+                    </a>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+
+</aside>

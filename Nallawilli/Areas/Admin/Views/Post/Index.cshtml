@@ -1,0 +1,135 @@
+@model IEnumerable<Nallawilli.Models.Entities.Post>
+@using System.Text.Json
+@using Nallawilli.Models.Enums
+
+@{
+    ViewData["Title"] = "Posts";
+    var flashSuccess = TempData["Success"] as string;
+    var flashError = TempData["Error"] as string;
+    var indexPageJson = JsonSerializer.Serialize(
+        new { flashSuccess, flashError },
+        new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
+}
+
+<link rel="stylesheet" href="~/assets/admin/css/dataTables.dataTables.min.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/assets/admin/css/pages/post/index.css" asp-append-version="true" />
+
+<div class="breadcrumb mb-24">
+    <ul class="flex-align gap-4">
+        <li><a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" class="text-gray-200 fw-normal text-15 hover-text-main-600">Dashboard</a></li>
+        <li><span class="text-gray-500 fw-normal d-flex"><i class="ph ph-caret-right"></i></span></li>
+        <li><span class="text-main-600 fw-normal text-15">Posts</span></li>
+    </ul>
+</div>
+
+<div class="card mt-24">
+    <div class="card-body">
+        <div class="flex-between flex-wrap gap-12 mb-30">
+            <h4 class="mb-0">Posts</h4>
+            <a asp-area="Admin" asp-controller="Post" asp-action="Create" class="btn btn-main text-sm btn-sm px-24 rounded-pill py-12 d-flex align-items-center gap-2">
+                <i class="ph ph-plus me-4"></i> New post
+            </a>
+        </div>
+
+        <div class="table-responsive">
+            <table id="postsTable" class="table table-hover align-middle w-100">
+                <thead>
+                    <tr>
+                        <th class="text-center">Image</th>
+                        <th>Title</th>
+                        <th>Author</th>
+                        <th>Category</th>
+                        <th>Status</th>
+                        <th>Created</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="text-center align-middle">
+                                <div class="post-thumb-cell d-inline-flex align-items-center justify-content-center w-48 h-48 rounded-6 overflow-hidden bg-gray-50 border border-gray-100 flex-shrink-0 mx-auto">
+                                    @if (!string.IsNullOrEmpty(item.Thumbnail))
+                                    {
+                                        <img src="@item.Thumbnail" alt="" class="w-100 h-100 object-fit-cover" />
+                                    }
+                                    else
+                                    {
+                                        <span class="text-gray-400 text-12">—</span>
+                                    }
+                                </div>
+                            </td>
+                            <td class="posts-title-cell">
+                                <span class="posts-title-text" title="@item.Title">@item.Title</span>
+                            </td>
+                            <td>@(string.IsNullOrEmpty(item.Author) ? "—" : item.Author)</td>
+                            <td>@(item.Category?.Name ?? "—")</td>
+                            <td>
+                                @{
+                                    var statusBadge = item.Status switch
+                                    {
+                                        ContentStatus.Published => "badge rounded-pill bg-success-50 text-success-600",
+                                        ContentStatus.Scheduled => "badge rounded-pill bg-warning-50 text-warning-600",
+                                        _ => "badge rounded-pill bg-gray-100 text-gray-600"
+                                    };
+                                }
+                                <span class="@statusBadge">@item.Status</span>
+                            </td>
+                            <td data-order="@(item.CreatedAt?.ToString("o") ?? "")">@(item.CreatedAt?.ToLocalTime().ToString("dd MMM yyyy, HH:mm") ?? "—")</td>
+                            <td class="text-end text-nowrap">
+                                @* oke *@
+                                <div class="dropdown flex-shrink-0 d-flex justify-content-center">
+                                    <button class="text-gray-400 text-xl d-flex rounded-4" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="ph ph-dots-three-vertical"></i>
+                                    </button>
+                                    <div class="dropdown-menu dropdown-menu--md border-0 bg-transparent p-0">
+                                        <div class="card border border-gray-100 rounded-12 box-shadow-custom">
+                                            <div class="card-body p-12">
+                                                <div class="max-h-200 overflow-y-auto scroll-sm">
+                                                    <ul>
+                                                        <li class="mb-2">
+                                                            <a asp-area="Admin" asp-controller="Post" asp-action="Edit" asp-route-id="@item.Id" class="py-6 text-15 px-8 hover-bg-gray-50 text-gray-300 w-100 rounded-8 fw-normal text-xs d-block text-start">
+                                                                <span class="text"> <i class="ph ph-pencil-simple me-5"></i> Edit</span>
+                                                            </a>
+                                                        </li>
+                                                        <li class="mb-0">
+                                                            <button type="button" class="py-6 text-15 px-8 hover-bg-gray-50 text-gray-300 w-100 rounded-8 fw-normal text-xs d-block text-start btn-post-delete" title="Delete" data-id="@item.Id">
+                                                                <span class="text"> <i class="ph ph-trash me-5"></i> Delete</span>
+                                                            </button>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @* okokokok *@
+                                @* <a asp-area="Admin" asp-controller="Post" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning rounded-8 px-10 py-6" title="Edit">
+                                    <i class="ph ph-pencil-simple"></i>
+                                </a>
+                                <button type="button" class="btn btn-sm btn-danger rounded-8 px-10 py-6 btn-post-delete" title="Delete" data-id="@item.Id">
+                                    <i class="ph ph-trash"></i>
+                                </button> *@
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+<form id="post-delete-form" asp-area="Admin" asp-controller="Post" asp-action="Delete" method="post" class="d-none">
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="id" id="post-delete-id" value="" />
+</form>
+
+<script type="application/json" id="post-index-page-data">@Html.Raw(indexPageJson)</script>
+
+@section Scripts {
+    <script src="~/assets/admin/js/dataTables.min.js" asp-append-version="true"></script>
+    <script src="~/assets/admin/js/pages/post/index.js" asp-append-version="true"></script>
+}

@@ -1,0 +1,30 @@
+.swal2-popup {
+    font-size: 0.9375rem;
+    line-height: 1.5;
+}
+
+.swal2-popup .swal2-title {
+    font-size: 1.125rem !important;
+    line-height: 1.35 !important;
+    font-weight: 600 !important;
+    margin: 0 !important;
+    color: hsl(var(--heading-color, 220 20% 15%));
+}
+
+.swal2-popup .swal2-html-container {
+    font-size: 0.9375rem !important;
+    line-height: 1.5 !important;
+    font-weight: 400 !important;
+    margin: 0.5em 0 0 !important;
+    color: hsl(var(--body-color, 220 10% 40%));
+}
+
+.swal2-popup .swal2-html-container strong {
+    font-weight: 600;
+}
+
+.swal2-popup .swal2-actions .swal2-styled {
+    font-size: 0.875rem !important;
+    padding: 0.5em 1.25em !important;
+    line-height: 1.25 !important;
+}

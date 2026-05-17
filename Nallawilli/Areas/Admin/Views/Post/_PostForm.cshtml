@@ -1,0 +1,73 @@
+@model PostFormViewModel
+
+<div asp-validation-summary="ModelOnly" class="text-danger mb-16"></div>
+
+<div class="row gy-4 align-items-start">
+    <div class="col-12 col-lg-8">
+        <div class="card border border-gray-100 rounded-12 p-20 h-100">
+            <div class="mb-16">
+                <label asp-for="Title" class="form-label text-gray-600 text-13 fw-medium"></label>
+                <input asp-for="Title" class="form-control" autocomplete="off" />
+                <span asp-validation-for="Title" class="text-danger text-12"></span>
+            </div>
+            <div>
+                <label asp-for="Content" class="form-label text-gray-600 text-13 fw-medium"></label>
+                <div class="post-quill-wrap rounded-8 border border-gray-200 overflow-hidden bg-white">
+                    <div id="post-quill-editor"></div>
+                </div>
+                <textarea asp-for="Content" class="d-none" rows="1"></textarea>
+                <span asp-validation-for="Content" class="text-danger text-12"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 col-lg-4">
+        <div class="card border border-gray-100 rounded-12 p-20 h-100">
+            <h6 class="text-14 fw-semibold text-gray-700 mb-16">Publishing</h6>
+
+            <div id="post-form-meta"
+                 class="mb-16"
+                 data-hint-draft="Draft — not shown on the public site. Save anytime; switch to Published or Scheduled when you are ready."
+                 data-hint-published="Published now — this post is live and will appear anywhere your public site lists published posts."
+                 data-hint-scheduled="Scheduled — pick the date and time below. The post stays hidden on the public site until then (when your site supports scheduled publishing).">
+                <div id="post-status-hint" class="rounded-8 p-12 text-13 mb-0 border border-gray-200 bg-gray-50 text-gray-700"></div>
+            </div>
+
+            <div class="mb-16">
+                <label asp-for="CategoryId" class="form-label text-gray-600 text-13 fw-medium"></label>
+                <select asp-for="CategoryId" asp-items="Model.CategoryOptions" class="form-select">
+                    <option value="">— Select category —</option>
+                </select>
+                <span asp-validation-for="CategoryId" class="text-danger text-12"></span>
+            </div>
+
+            <div class="mb-16">
+                <label asp-for="Status" class="form-label text-gray-600 text-13 fw-medium"></label>
+                <select asp-for="Status" asp-items="Html.GetEnumSelectList<ContentStatus>()" class="form-select" id="post-status-select"></select>
+                <span class="text-gray-500 text-12 d-block mt-6">Default is Draft if you only click Save.</span>
+                <span asp-validation-for="Status" class="text-danger text-12"></span>
+            </div>
+
+            <div id="post-schedule-group" class="@(Model.Status == ContentStatus.Scheduled ? "" : "d-none") mb-16">
+                <label asp-for="ScheduledPublishAt" class="form-label text-gray-600 text-13 fw-medium"></label>
+                <input asp-for="ScheduledPublishAt" class="form-control" type="datetime-local" />
+                <span class="text-gray-500 text-12 d-block mt-4">Required when status is Scheduled.</span>
+                <span asp-validation-for="ScheduledPublishAt" class="text-danger text-12"></span>
+            </div>
+
+            <div class="mb-16">
+                <input type="hidden" asp-for="Thumbnail" />
+                <label asp-for="ThumbnailFile" class="form-label text-gray-600 text-13 fw-medium"></label>
+                @if (!string.IsNullOrEmpty(Model.Thumbnail))
+                {
+                    <div class="mb-8">
+                        <img src="@Model.Thumbnail" alt="" class="post-form-thumb-preview rounded-8 border border-gray-100 d-block" />
+                    </div>
+                }
+                <input asp-for="ThumbnailFile" class="form-control" accept="image/jpeg,image/png,image/gif,image/webp" />
+                <span class="text-gray-500 text-12 d-block mt-4">JPG, PNG, GIF, or WebP — max 5 MB. Leave empty to keep the current image.</span>
+                <span asp-validation-for="ThumbnailFile" class="text-danger text-12"></span>
+            </div>
+        </div>
+    </div>
+</div>

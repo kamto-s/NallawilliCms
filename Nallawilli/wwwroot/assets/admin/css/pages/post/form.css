@@ -1,0 +1,8 @@
+#post-quill-editor {
+    min-height: 280px;
+}
+
+.post-form-thumb-preview {
+    max-height: 120px;
+    max-width: 100%;
+}

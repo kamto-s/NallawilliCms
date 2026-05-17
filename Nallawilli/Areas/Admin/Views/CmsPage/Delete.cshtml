@@ -1,0 +1,35 @@
+@model Nallawilli.Models.Entities.CmsPage
+@{
+    ViewData["Title"] = "Delete page";
+    var sectionCount = ViewBag.SectionCount as int? ?? 0;
+}
+
+<div class="breadcrumb mb-24">
+    <ul class="flex-align gap-4">
+        <li><a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" class="text-gray-200 fw-normal text-15 hover-text-main-600">Dashboard</a></li>
+        <li><span class="text-gray-500 fw-normal d-flex"><i class="ph ph-caret-right"></i></span></li>
+        <li><a asp-action="Index" class="text-gray-200 fw-normal text-15 hover-text-main-600">Pages</a></li>
+        <li><span class="text-gray-500 fw-normal d-flex"><i class="ph ph-caret-right"></i></span></li>
+        <li><span class="text-main-600 fw-normal text-15">Delete</span></li>
+    </ul>
+</div>
+
+<div class="card mt-24">
+    <div class="card-body">
+        <h4 class="mb-12">Delete page</h4>
+        <p class="text-gray-600 mb-20">This archives the page and its sections (soft delete).</p>
+        <dl class="row mb-24">
+            <dt class="col-sm-3 text-gray-600">Title</dt>
+            <dd class="col-sm-9 fw-medium">@Model.Title</dd>
+            <dt class="col-sm-3 text-gray-600">Slug</dt>
+            <dd class="col-sm-9"><code class="text-main-600">@Model.Slug</code></dd>
+            <dt class="col-sm-3 text-gray-600">Sections</dt>
+            <dd class="col-sm-9">@sectionCount</dd>
+        </dl>
+        <form asp-action="Delete" asp-route-id="@Model.Id" method="post" class="flex-align gap-12">
+            @Html.AntiForgeryToken()
+            <button type="submit" class="btn btn-danger rounded-pill px-24">Delete</button>
+            <a asp-action="Index" class="btn border border-gray-200 text-gray-600 rounded-pill px-24 hover-border-main-600 hover-text-main-600">Cancel</a>
+        </form>
+    </div>
+</div>

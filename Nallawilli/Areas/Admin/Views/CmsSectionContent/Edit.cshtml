@@ -1,0 +1,19 @@
+@model CmsSectionContentFormViewModel
+@{ ViewData["Title"] = "Edit content"; }
+
+<div class="card mt-24">
+    <div class="card-body">
+        <h4 class="mb-20">Edit content field</h4>
+        <form asp-action="Edit" asp-route-id="@Model.Id" method="post">
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="SectionId" />
+            <partial name="_CmsSectionContentForm" model="Model" />
+            <div class="flex-align gap-12 mt-24">
+                <button type="submit" class="btn btn-main rounded-pill px-24">Save changes</button>
+                <a asp-action="Index" asp-route-sectionId="@Model.SectionId" class="btn border border-gray-200 text-gray-600 rounded-pill px-24">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

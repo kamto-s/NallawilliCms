@@ -1,0 +1,21 @@
+.cmspage-card-grid {
+    margin-bottom: 0;
+}
+
+.cmspage-card {
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.cmspage-card:hover {
+    border-color: var(--main-200, #c4d4f0) !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+}
+
+.cmspage-card__title {
+    line-height: 1.35;
+    min-width: 0;
+}
+
+.cmspage-card__slug {
+    word-break: break-all;
+}
