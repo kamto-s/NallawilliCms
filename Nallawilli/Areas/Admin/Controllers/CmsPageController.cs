@@ -72,14 +72,35 @@ namespace Nallawilli.Areas.Admin.Controllers
 
             ViewBag.ShowPageStructureTools = _cmsAdminOptions.ShowPageStructureTools;
 
-            var updates = await BuildContentUpdatesAsync(model, cancellationToken);
+            var dbVm = await _manage.GetManageViewModelAsync(id, cancellationToken);
+            if (dbVm is null)
+                return NotFound();
+
+            MergePostedValuesFromForm(dbVm);
+
+            var updates = await BuildContentUpdatesAsync(dbVm, cancellationToken);
             if (!ModelState.IsValid)
             {
-                var invalidVm = await _manage.GetManageViewModelAsync(id, cancellationToken);
-                if (invalidVm is null)
-                    return NotFound();
-                MergePostedValues(invalidVm, model);
-                return View(invalidVm);
+                return View(dbVm);
+            }
+
+            var postedImages = GetPostedImageFilesByContentId();
+            if (postedImages.Count > 0)
+            {
+                var imageFieldIds = dbVm.Sections
+                    .SelectMany(s => s.Fields)
+                    .Where(f => string.Equals(f.InputType, CmsInputTypes.Image, StringComparison.OrdinalIgnoreCase))
+                    .Select(f => f.ContentId)
+                    .ToHashSet();
+
+                var unmatched = postedImages.Keys.Where(id => !imageFieldIds.Contains(id)).ToList();
+                if (unmatched.Count > 0)
+                {
+                    ModelState.AddModelError(
+                        string.Empty,
+                        "Image upload could not be matched. Refresh the page and try again.");
+                    return View(dbVm);
+                }
             }
 
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? User.Identity?.Name;
@@ -97,12 +118,8 @@ namespace Nallawilli.Areas.Admin.Controllers
                     return RedirectToAction(nameof(Manage), new { id });
             }
 
-            var refreshed = await _manage.GetManageViewModelAsync(id, cancellationToken);
-            if (refreshed is null)
-                return NotFound();
-
-            MergePostedValues(refreshed, model);
-            return View(refreshed);
+            MergePostedValuesFromForm(dbVm);
+            return View(dbVm);
         }
 
         [HttpGet]
@@ -252,41 +269,38 @@ namespace Nallawilli.Areas.Admin.Controllers
         }
 
         private async Task<List<CmsContentValueUpdate>> BuildContentUpdatesAsync(
-            CmsPageManageViewModel model,
+            CmsPageManageViewModel dbVm,
             CancellationToken cancellationToken)
         {
             var updates = new List<CmsContentValueUpdate>();
+            var postedImages = GetPostedImageFilesByContentId();
 
-            foreach (var field in model.Sections.SelectMany(s => s.Fields))
+            foreach (var field in dbVm.Sections.SelectMany(s => s.Fields))
             {
                 var value = field.ContentValue;
 
-                if (string.Equals(field.InputType, CmsInputTypes.Image, StringComparison.OrdinalIgnoreCase))
+                if (string.Equals(field.InputType, CmsInputTypes.Image, StringComparison.OrdinalIgnoreCase)
+                    && postedImages.TryGetValue(field.ContentId, out var file))
                 {
-                    var file = Request.Form.Files.GetFile($"imageFile_{field.ContentId}");
-                    if (file is { Length: > 0 })
+                    var (path, error) = await CmsAdminImageStorage.TrySaveAsync(
+                        _env,
+                        file,
+                        CmsAdminImageStorage.WebPrefixSections,
+                        cancellationToken);
+
+                    if (error is not null)
                     {
-                        var (path, error) = await CmsAdminImageStorage.TrySaveAsync(
+                        ModelState.AddModelError(
+                            string.Empty,
+                            $"Image \"{field.ContentKey}\": {error}");
+                    }
+                    else if (path is not null)
+                    {
+                        CmsAdminImageStorage.TryDeleteIfManaged(
                             _env,
-                            file,
-                            CmsAdminImageStorage.WebPrefixSections,
-                            cancellationToken);
-
-                        if (error is not null)
-                        {
-                            ModelState.AddModelError(
-                                string.Empty,
-                                $"Image \"{field.ContentKey}\": {error}");
-                        }
-
-                        if (path is not null)
-                        {
-                            CmsAdminImageStorage.TryDeleteIfManaged(
-                                _env,
-                                value,
-                                CmsAdminImageStorage.WebPrefixSections);
-                            value = path;
-                        }
+                            value,
+                            CmsAdminImageStorage.WebPrefixSections);
+                        value = path;
                     }
                 }
 
@@ -296,19 +310,50 @@ namespace Nallawilli.Areas.Admin.Controllers
             return updates;
         }
 
-        private static void MergePostedValues(CmsPageManageViewModel target, CmsPageManageViewModel posted)
+        private Dictionary<Guid, IFormFile> GetPostedImageFilesByContentId()
         {
-            foreach (var section in target.Sections)
+            const string prefix = "imageFile_";
+            var map = new Dictionary<Guid, IFormFile>();
+
+            foreach (var file in Request.Form.Files)
             {
-                var postedSection = posted.Sections.FirstOrDefault(s => s.SectionId == section.SectionId);
-                if (postedSection is null)
+                if (!file.Name.StartsWith(prefix, StringComparison.Ordinal)
+                    || file.Length == 0)
                     continue;
 
-                foreach (var field in section.Fields)
+                if (Guid.TryParse(file.Name[prefix.Length..], out var contentId))
+                    map[contentId] = file;
+            }
+
+            return map;
+        }
+
+        /// <summary>
+        /// Read field values directly from the form (reliable with multipart + nested sections).
+        /// </summary>
+        private void MergePostedValuesFromForm(CmsPageManageViewModel target)
+        {
+            for (var si = 0; si < target.Sections.Count; si++)
+            {
+                var section = target.Sections[si];
+                for (var fi = 0; fi < section.Fields.Count; fi++)
                 {
-                    var postedField = postedSection.Fields.FirstOrDefault(f => f.ContentId == field.ContentId);
-                    if (postedField is not null)
-                        field.ContentValue = postedField.ContentValue;
+                    var field = section.Fields[fi];
+                    var prefix = $"Sections[{si}].Fields[{fi}]";
+
+                    if (string.Equals(field.InputType, CmsInputTypes.Boolean, StringComparison.OrdinalIgnoreCase))
+                    {
+                        var raw = Request.Form[$"{prefix}.ContentValue"];
+                        field.ContentValue = raw.Count > 0 && raw[^1] == "true" ? "true" : "false";
+                        continue;
+                    }
+
+                    // Image paths are set only when a new file is uploaded — do not clear from empty hidden input.
+                    if (string.Equals(field.InputType, CmsInputTypes.Image, StringComparison.OrdinalIgnoreCase))
+                        continue;
+
+                    if (Request.Form.TryGetValue($"{prefix}.ContentValue", out var contentValue))
+                        field.ContentValue = contentValue.ToString();
                 }
             }
         }

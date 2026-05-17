@@ -1,5 +1,5 @@
 ﻿@model CmsPublicSectionViewModel
-
+@using Nallawilli.Helpers.Public
 @{
     var title = Model.Get("title");
     var subtitle = Model.Get("subtitle");
@@ -28,7 +28,10 @@
 
             <div class="col-md-6">
                 <div class="about-img position-relative">
-                    <img src="@image" class="" alt="@title">
+                    @if (!string.IsNullOrEmpty(image))
+                    {
+                        <img src="@Url.Content(CmsMediaPaths.ToAppRelative(image)!)" class="" alt="@title">
+                    }
                 </div>
             </div>
         </div>

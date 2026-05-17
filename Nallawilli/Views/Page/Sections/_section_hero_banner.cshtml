@@ -1,15 +1,17 @@
 ﻿@model CmsPublicSectionViewModel
-
+@using Nallawilli.Helpers.Public
 @{
     var subtitle = Model.Get("subtitle");
     var title = Model.Get("title");
     var bgImage = Model.Get("bg_image");
+    var bgImageUrl = CmsMediaPaths.ToAppRelative(bgImage);
 }
 
 <section class="bg-home d-flex align-items-center overflow-hidden position-relative"
          id="home"
-         style="min-height: 100vh; background-image: url('@Url.Content(@bgImage)'); background-repeat: no-repeat; background-size: cover; background-position: center center;">
-    <div class="container">
+         style="min-height: 100vh; background-image: url('@(bgImageUrl is null ? "" : Url.Content(bgImageUrl))'); background-repeat: no-repeat; background-size: cover; background-position: center center;">
+    <div class="bg-overlay bg-dark" style="opacity: 0.5;"></div>
+         <div class="container">
         <div class="row align-items-center">
             <div class="col-lg-6 col-md-6 col-sm-12 text-start">
                 <div class="title-heading">

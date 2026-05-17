@@ -1,7 +1,8 @@
 ﻿@model CmsPublicSectionViewModel
-
+@using Nallawilli.Helpers.Public
 @{
     var bgImage = Model.Get("bg_image");
+    var bgImageUrl = CmsMediaPaths.ToAppRelative(bgImage);
     var icon1 = Model.Get("icon_1");
     var number1 = Model.Get("number_1");
     var label1 = Model.Get("label_1");
@@ -25,7 +26,7 @@
 }
 
 <section class="section bg-cta" data-jarallax='{"speed": 0.5}'
-         style="background: url('@Url.Content(bgImage)') fixed center no-repeat;" id="cta">
+         style="background: url('@(bgImageUrl is null ? "" : Url.Content(bgImageUrl))') fixed center no-repeat;" id="cta">
     <div class="bg-overlay bg-black" style="opacity: 0.6;"></div>
     <div class="container">
         <div class="row align-items-center justify-content-center">
@@ -33,7 +34,7 @@
             <div class="col-lg-3 col-md-3 col-12 mt-4 pt-2 d-flex">
                 <div class="pricing text-center rounded overflow-hidden shadow h-100 w-100 d-flex flex-column">
                     <div class="d-flex flex-column justify-content-center align-items-center bg-light border-bottom py-5 flex-grow-1">
-                        <img src="@icon1" alt="@label1" />
+                        @if (!string.IsNullOrEmpty(icon1)) { <img src="@Url.Content(CmsMediaPaths.ToAppRelative(icon1)!)" alt="@label1" /> }
                         <h1 class="my-3">@number1</h1>
                         <p class="mb-4">@label1</p>
                     </div>
@@ -46,7 +47,7 @@
             <div class="col-lg-3 col-md-3 col-12 mt-4 pt-2 d-flex">
                 <div class="pricing text-center rounded overflow-hidden shadow h-100 w-100 d-flex flex-column">
                     <div class="d-flex flex-column justify-content-center align-items-center bg-light border-bottom py-5 flex-grow-1">
-                        <img src="@icon2" alt="@label2" />
+                        @if (!string.IsNullOrEmpty(icon2)) { <img src="@Url.Content(CmsMediaPaths.ToAppRelative(icon2)!)" alt="@label2" /> }
                         <h1 class="my-3">@number2</h1>
                         <p class="mb-4">@label2</p>
                     </div>
@@ -59,7 +60,7 @@
             <div class="col-lg-3 col-md-3 col-12 mt-4 pt-2 d-flex">
                 <div class="pricing text-center rounded overflow-hidden shadow h-100 w-100 d-flex flex-column">
                     <div class="d-flex flex-column justify-content-center align-items-center bg-light border-bottom py-5 flex-grow-1">
-                        <img src="@icon3" alt="@label3" />
+                        @if (!string.IsNullOrEmpty(icon3)) { <img src="@Url.Content(CmsMediaPaths.ToAppRelative(icon3)!)" alt="@label3" /> }
                         <h1 class="my-3">@number3</h1>
                         <p>@label3</p>
                     </div>
@@ -73,7 +74,7 @@
             <div class="col-lg-3 col-md-3 col-12 mt-4 pt-2 d-flex">
                 <div class="pricing text-center rounded overflow-hidden shadow h-100 w-100 d-flex flex-column">
                     <div class="d-flex flex-column justify-content-center align-items-center bg-light border-bottom py-5 flex-grow-1">
-                        <img src="@icon4" alt="@label4" />
+                        @if (!string.IsNullOrEmpty(icon4)) { <img src="@Url.Content(CmsMediaPaths.ToAppRelative(icon4)!)" alt="@label4" /> }
                         <h1 class="my-3">@number4</h1>
                         <p class="mb-4">@label4</p>
                     </div>

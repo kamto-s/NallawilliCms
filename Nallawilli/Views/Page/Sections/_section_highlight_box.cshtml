@@ -1,9 +1,10 @@
 ﻿@model CmsPublicSectionViewModel
-
+@using Nallawilli.Helpers.Public
 @{
     var title = Model.Get("title");
     var subtitle = Model.Get("subtitle");
     var bgimage = Model.Get("bg_image");
+    var bgImageUrl = CmsMediaPaths.ToAppRelative(bgimage);
     var description = Model.Get("description");
 
 }
@@ -16,7 +17,7 @@
 </style>
 
 <section class="section bg-cta" data-jarallax='{"speed": 0.5}'
-         style="background: url('@Url.Content(bgimage)') fixed center no-repeat;" id="cta">
+         style="background: url('@(bgImageUrl is null ? "" : Url.Content(bgImageUrl))') fixed center no-repeat;" id="cta">
     <div class="bg-overlay bg-warning" style="opacity: 0.6;"></div>
     <div class="container">
         <div class="row justify-content-center">

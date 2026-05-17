@@ -1,4 +1,5 @@
 @model CmsContentFieldViewModel
+@using Nallawilli.Helpers.Public
 @{
     var prefix = ViewData["FieldPrefix"] as string ?? string.Empty;
     var fieldId = string.IsNullOrEmpty(prefix)
@@ -55,7 +56,7 @@
         @if (!string.IsNullOrEmpty(Model.ContentValue))
         {
             <div class="cms-image-preview mt-12">
-                <img src="@Model.ContentValue" alt="@Model.ContentKey" class="cms-image-preview__img" />
+                <img src="@Url.Content(CmsMediaPaths.ToAppRelative(Model.ContentValue)!)" alt="@Model.ContentKey" class="cms-image-preview__img" />
                 <p class="text-gray-500 text-12 mt-8 mb-0"><code>@Model.ContentValue</code></p>
             </div>
         }

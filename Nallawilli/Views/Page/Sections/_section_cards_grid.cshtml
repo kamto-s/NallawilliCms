@@ -1,5 +1,5 @@
 ﻿@model CmsPublicSectionViewModel
-
+@using Nallawilli.Helpers.Public
 @{
     var title1 = Model.Get("title_1");
     var image1 = Model.Get("image_1");
@@ -20,7 +20,10 @@
             <div class="col-md-6">
                 <div class="card border-0">
                     <h2 class="card-title mb-3">@title1</h2>
-                    <img src="@image1" alt="@title1" class="h-50 w-100 mb-3">
+                    @if (!string.IsNullOrEmpty(image1))
+                    {
+                        <img src="@Url.Content(CmsMediaPaths.ToAppRelative(image1)!)" alt="@title1" class="h-50 w-100 mb-3">
+                    }
                     <p class="card-text">@Html.Raw(description1)</p>
                     <a href="@buttonUrl1" class="btn btn-primary w-50">@buttonText1 <i class="mdi mdi-arrow-right ms-2"></i></a>
                 </div>
@@ -29,7 +32,10 @@
             <div class="col-md-6">
                 <div class="card border-0">
                     <h2 class="card-title mb-3">@title2</h2>
-                    <img src="@image1" alt="@title2" class="h-50 w-100 mb-3">
+                    @if (!string.IsNullOrEmpty(image2))
+                    {
+                        <img src="@Url.Content(CmsMediaPaths.ToAppRelative(image2)!)" alt="@title2" class="h-50 w-100 mb-3">
+                    }
                     <p class="card-text">@Html.Raw(description2)</p>
                     <a href="@buttonUrl2" class="btn btn-primary w-50">@buttonText2 <i class="mdi mdi-arrow-right ms-2"></i></a>
                 </div>
