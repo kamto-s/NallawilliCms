@@ -74,8 +74,7 @@ namespace Nallawilli.Data
             // CMS SECTION
             // =====================
             modelBuilder.Entity<CmsSection>()
-                .HasIndex(x => new { x.PageId, x.SectionCode })
-                .IsUnique();
+                .HasIndex(x => x.PageId);
 
             modelBuilder.Entity<CmsSection>()
                 .HasQueryFilter(x => x.DeletedAt == null);

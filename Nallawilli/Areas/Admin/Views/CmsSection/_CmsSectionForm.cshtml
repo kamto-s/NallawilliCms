@@ -7,7 +7,7 @@
         <label asp-for="SectionCode" class="form-label text-gray-600 text-13 fw-medium"></label>
         <input asp-for="SectionCode" class="form-control" autocomplete="off" placeholder="hero" />
         <span asp-validation-for="SectionCode" class="text-danger text-12"></span>
-        <p class="text-gray-500 text-12 mt-8 mb-0">e.g. hero, _hero, hero-main. Saved as lowercase.</p>
+        <p class="text-gray-500 text-12 mt-8 mb-0">Maps to <code>Views/Page/Sections/{code}.cshtml</code>. Same code may be used more than once on one page (e.g. two <code>_hero</code> blocks). Saved as lowercase.</p>
     </div>
     <div class="col-12">
         <label asp-for="SectionName" class="form-label text-gray-600 text-13 fw-medium"></label>

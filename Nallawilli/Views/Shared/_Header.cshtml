@@ -6,7 +6,7 @@
 <header id="topnav" class="defaultscroll sticky">
     <div class="container">
         <!-- Logo container-->
-        <a class="logo" asp-controller="Page" asp-action="Index">
+        <a class="logo" asp-area="" asp-controller="Page" asp-action="Index">
             <span class="logo-light-mode">
                 <img src="~/assets/public/images/logo-dark.png" class="l-dark" alt="" style="max-height:64px !important;">
                 <img src="~/assets/public/images/logo-light.png" class="l-light" alt="" style="max-height:64px !important;">
@@ -31,20 +31,22 @@
         <div id="navigation">
             <!-- Navigation Menu-->
             <ul class="navigation-menu nav-light nav-right">
+                
                 @await Component.InvokeAsync("PublicMenu")
+
                 @if (SignInManager.IsSignedIn(User))
                 {
                     <li>
-                        <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">
-                           Dashboard
+                        <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" class="rounded icon-sm">
+                            <i data-feather="user" class="fea icon-sm"></i>
                         </a>
                     </li>
                 }
                 else
                 {
-                    <li>
+                    @* <li>
                         <a class="sub-menu-item" id="register" asp-area="Identity" asp-page="/Account/Register">Register</a>
-                    </li>
+                    </li> *@
                     <li>
                         <a class="sub-menu-item" id="login" asp-area="Identity" asp-page="/Account/Login">Login</a>
                     </li>

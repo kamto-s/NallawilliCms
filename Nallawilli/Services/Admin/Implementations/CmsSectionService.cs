@@ -45,12 +45,6 @@ namespace Nallawilli.Services.Admin.Implementations
                 return CmsSectionMutationResult.Fail("PageId", "CMS page not found.");
 
             var code = sectionCode.Trim().ToLowerInvariant();
-            if (await SectionCodeExistsOnPageAsync(pageId, code, excludeSectionId: null, cancellationToken))
-            {
-                return CmsSectionMutationResult.Fail(
-                    "SectionCode",
-                    "A section with this code already exists on this page.");
-            }
 
             var entity = new CmsSection
             {
@@ -83,12 +77,6 @@ namespace Nallawilli.Services.Admin.Implementations
                 return CmsSectionMutationResult.Fail(string.Empty, "Section not found.");
 
             var code = sectionCode.Trim().ToLowerInvariant();
-            if (await SectionCodeExistsOnPageAsync(entity.PageId, code, excludeSectionId: id, cancellationToken))
-            {
-                return CmsSectionMutationResult.Fail(
-                    "SectionCode",
-                    "A section with this code already exists on this page.");
-            }
 
             entity.SectionCode = code;
             entity.SectionName = sectionName.Trim();
@@ -129,23 +117,6 @@ namespace Nallawilli.Services.Admin.Implementations
         private Task<bool> PageExistsAsync(Guid pageId, CancellationToken cancellationToken)
         {
             return _db.CmsPages.AnyAsync(p => p.Id == pageId, cancellationToken);
-        }
-
-        private Task<bool> SectionCodeExistsOnPageAsync(
-            Guid pageId,
-            string sectionCode,
-            Guid? excludeSectionId,
-            CancellationToken cancellationToken)
-        {
-            var q = _db.CmsSections
-                .IgnoreQueryFilters()
-                .AsNoTracking()
-                .Where(s => s.PageId == pageId && s.SectionCode == sectionCode);
-
-            if (excludeSectionId.HasValue)
-                q = q.Where(s => s.Id != excludeSectionId.Value);
-
-            return q.AnyAsync(cancellationToken);
         }
     }
 }

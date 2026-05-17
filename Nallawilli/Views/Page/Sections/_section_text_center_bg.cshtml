@@ -7,17 +7,9 @@
     var description = Model.Get("description");
 
 }
-
-<style>
-    .bg-black {
-        --bs-bg-opacity: 1;
-        background-color: rgba(var(--bs-black-rgb), var(--bs-bg-opacity)) !important;
-    }
-</style>
-
 <section class="section bg-cta" data-jarallax='{"speed": 0.5}'
          style="background: url('@Url.Content(bgimage)') fixed center no-repeat;" id="cta">
-    <div class="bg-overlay bg-warning" style="opacity: 0.6;"></div>
+    <div class="bg-overlay bg-black" style="opacity: 0.6;"></div>
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-10 col-md-9 col-12 text-center">
@@ -29,9 +21,6 @@
                     </p>
                 </div>
             </div>
-            <!--end col-->
         </div>
-        <!--end row-->
     </div>
-    <!--end container-->
 </section>
