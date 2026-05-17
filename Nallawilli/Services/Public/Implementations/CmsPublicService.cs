@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Nallawilli.Data;
 using Nallawilli.Services.Public.Interfaces;
-using Nallawilli.ViewModels;
+using Nallawilli.ViewModels.Public;
 
 namespace Nallawilli.Services.Public.Implementations
 {
@@ -60,7 +60,7 @@ namespace Nallawilli.Services.Public.Implementations
             {
                 Slug = page.Slug,
                 Title = page.Title,
-                PageTitle = page.MetaTitle ?? page.Title,
+                MetaTitle = page.MetaTitle ?? page.Title,
                 MetaDescription = page.MetaDescription,
                 Sections = page.Sections.Select(s =>
                 {
@@ -82,6 +82,23 @@ namespace Nallawilli.Services.Public.Implementations
                     };
                 }).ToList()
             };
+        }
+
+        public async Task<IReadOnlyList<CmsPublicMenuItemViewModel>> GetMenuPagesAsync(
+            CancellationToken cancellationToken = default)
+        {
+            return await _db.CmsPages
+                .AsNoTracking()
+                .Where(p => p.IsActive && p.ShowInMenu)
+                .OrderBy(p => p.SortOrder)
+                .ThenBy(p => p.Title)
+                .Select(p => new CmsPublicMenuItemViewModel
+                {
+                    Title = p.Title,
+                    Slug = p.Slug,
+                    SortOrder = p.SortOrder
+                })
+                .ToListAsync(cancellationToken);
         }
     }
 }

@@ -1,7 +1,7 @@
 using System.Text.RegularExpressions;
 using Microsoft.EntityFrameworkCore;
 using Nallawilli.Data;
-using Nallawilli.Helpers;
+using Nallawilli.Helpers.Common;
 using Nallawilli.Models.Entities;
 using Nallawilli.Models.Enums;
 using Nallawilli.Services.Interfaces;

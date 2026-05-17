@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Nallawilli.Data;
-using Nallawilli.Helpers;
+using Nallawilli.Helpers.Common;
 using Nallawilli.Models.Entities;
 using Nallawilli.Services.Interfaces;
 

@@ -2,7 +2,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Nallawilli.Areas.Admin.ViewModels;
-using Nallawilli.Helpers;
+using Nallawilli.Helpers.Common;
 using Nallawilli.Services.Interfaces;
 
 namespace Nallawilli.Areas.Admin.Controllers

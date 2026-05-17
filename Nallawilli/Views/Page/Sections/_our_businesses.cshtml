@@ -1,7 +1,40 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model CmsPublicSectionViewModel
+
 @{
+    var title1 = Model.Get("title_1");
+    var image1 = Model.Get("image_1");
+    var description1 = Model.Get("description_1");
+    var buttonText1 = Model.Get("button_text_1");
+    var buttonUrl1 = Model.Get("button_url_1");
+
+    var title2 = Model.Get("title_2");
+    var image2 = Model.Get("image_2");
+    var description2 = Model.Get("description_2");
+    var buttonText2 = Model.Get("button_text_2");
+    var buttonUrl2 = Model.Get("button_url_2");
 }
 
-<h1>_our_businesses.cshtml</h1>
+<section class="section about-section position-relative" id="about">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <div class="card border-0">
+                    <h2 class="card-title mb-3">@title1</h2>
+                    <img src="@image1" alt="@title1" class="h-50 w-100 mb-3">
+                    <p class="card-text">@Html.Raw(description1)</p>
+                    <a href="@buttonUrl1" class="btn btn-primary w-50">@buttonText1 <i class="mdi mdi-arrow-right ms-2"></i></a>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card border-0">
+                    <h2 class="card-title mb-3">@title2</h2>
+                    <img src="@image1" alt="@title2" class="h-50 w-100 mb-3">
+                    <p class="card-text">@Html.Raw(description2)</p>
+                    <a href="@buttonUrl2" class="btn btn-primary w-50">@buttonText2 <i class="mdi mdi-arrow-right ms-2"></i></a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>

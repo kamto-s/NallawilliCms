@@ -1,7 +1,37 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model CmsPublicSectionViewModel
+
 @{
+    var title = Model.Get("title");
+    var subtitle = Model.Get("subtitle");
+    var bgimage = Model.Get("bg_image");
+    var description = Model.Get("description");
+
 }
 
-<h1>_what_we_believe.cshtml</h1>
+<style>
+    .bg-black {
+        --bs-bg-opacity: 1;
+        background-color: rgba(var(--bs-black-rgb), var(--bs-bg-opacity)) !important;
+    }
+</style>
+
+<section class="section bg-cta" data-jarallax='{"speed": 0.5}'
+         style="background: url('@Url.Content(bgimage)') fixed center no-repeat;" id="cta">
+    <div class="bg-overlay bg-warning" style="opacity: 0.6;"></div>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 col-md-9 col-12 text-center">
+                <div class="section-title text-white">
+                    <p>@subtitle</p>
+                    <h1 class="text-capitalize text-white fw-bold title mb-4">@title</h1>
+                    <p class="para-desc mx-auto mb-0">
+                        @Html.Raw(description)
+                    </p>
+                </div>
+            </div>
+            <!--end col-->
+        </div>
+        <!--end row-->
+    </div>
+    <!--end container-->
+</section>

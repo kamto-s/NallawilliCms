@@ -3,41 +3,56 @@
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
 
-<header id="header" class="header d-flex align-items-center sticky-top">
-    <div class="container position-relative d-flex align-items-center">
-
-        <a href="index.html" class="d-flex align-items-center me-auto">
-            <img src="~/assets/public/img/logo.png" alt="Logo" style="height:64px !important;">
+<header id="topnav" class="defaultscroll sticky">
+    <div class="container">
+        <!-- Logo container-->
+        <a class="logo" asp-controller="Page" asp-action="Index">
+            <span class="logo-light-mode">
+                <img src="~/assets/public/images/logo-dark.png" class="l-dark" alt="" style="max-height:64px !important;">
+                <img src="~/assets/public/images/logo-light.png" class="l-light" alt="" style="max-height:64px !important;">
+            </span>
+            <img src="~/assets/public/images/logo-light.png" class="logo-dark-mode" alt="">
         </a>
+        <!-- End Logo container-->
+        <div class="menu-extras">
+            <div class="menu-item">
+                <!-- Mobile menu toggle-->
+                <a class="navbar-toggle" id="isToggle" onclick="toggleMenu()">
+                    <div class="lines">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </a>
+                <!-- End mobile menu toggle-->
+            </div>
+        </div>
 
-        <nav id="navmenu" class="navmenu">
-            <ul>
-                <li><a href="#hero" class="active">HOME</a></li>
-                <li><a href="services.html">OUR STORY</a></li>
-                <li><a href="portfolio.html">WHY WE DO IT</a></li>
-                <li><a href="pricing.html">HOW WE DO IT</a></li>
-                <li><a href="blog.html">CONTACT US</a></li>
-
+        <div id="navigation">
+            <!-- Navigation Menu-->
+            <ul class="navigation-menu nav-light nav-right">
+                @await Component.InvokeAsync("PublicMenu")
                 @if (SignInManager.IsSignedIn(User))
                 {
                     <li>
                         <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">
-                            <i class="bi bi-person-circle"></i>
+                           Dashboard
                         </a>
                     </li>
                 }
                 else
                 {
                     <li>
-                        <a class="nav-link text-dark" id="register" asp-area="Identity" asp-page="/Account/Register">Register</a>
+                        <a class="sub-menu-item" id="register" asp-area="Identity" asp-page="/Account/Register">Register</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" id="login" asp-area="Identity" asp-page="/Account/Login">Login</a>
+                    <li>
+                        <a class="sub-menu-item" id="login" asp-area="Identity" asp-page="/Account/Login">Login</a>
                     </li>
                 }
-
             </ul>
-            <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
-        </nav>
+        </div>
+        <!--end navigation-->
     </div>
+    <!--end container-->
 </header>
+

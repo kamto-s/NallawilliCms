@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Diagnostics;
+using Microsoft.AspNetCore.Mvc;
+using Nallawilli.Helpers.Public;
+using Nallawilli.Models;
 using Nallawilli.Services.Public.Interfaces;
-using Nallawilli.ViewModels;
+using Nallawilli.ViewModels.Public;
 
 namespace Nallawilli.Controllers
 {
@@ -13,24 +16,30 @@ namespace Nallawilli.Controllers
             _cmsPublic = cmsPublic;
         }
 
-        [HttpGet("/page/{slug}")]
-        public async Task<IActionResult> Index(string slug, CancellationToken cancellationToken)
+        public async Task<IActionResult> Index(CancellationToken cancellationToken = default) =>
+            await RenderPageAsync(CmsPublicDefaults.HomePageSlug, cancellationToken);
+
+        public async Task<IActionResult> Page(string slug, CancellationToken cancellationToken = default) =>
+            await RenderPageAsync(slug, cancellationToken);
+
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View("~/Views/Shared/Error.cshtml", new ErrorViewModel
+            {
+                RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
+            });
+        }
+
+        private async Task<IActionResult> RenderPageAsync(string slug, CancellationToken cancellationToken)
         {
             var page = await _cmsPublic.GetPageBySlugAsync(slug, cancellationToken);
             if (page is null)
                 return NotFound();
 
-            SetPageViewData(page);
-            return View(page);
+            ViewData["Title"] = page.MetaTitle ?? page.Title;
+            ViewData["MetaDescription"] = page.MetaDescription;
+            return View("Index", page);
         }
-
-        internal static void SetPageViewData(Controller controller, CmsPublicPageViewModel page)
-        {
-            controller.ViewData["Title"] = page.PageTitle ?? page.Title;
-            controller.ViewData["MetaDescription"] = page.MetaDescription;
-        }
-
-        private void SetPageViewData(CmsPublicPageViewModel page) =>
-            SetPageViewData(this, page);
     }
 }

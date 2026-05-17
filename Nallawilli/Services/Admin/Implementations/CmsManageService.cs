@@ -1,7 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Nallawilli.Areas.Admin.ViewModels;
 using Nallawilli.Data;
-using Nallawilli.Helpers;
+using Nallawilli.Helpers.Admin;
+using Nallawilli.Helpers.Common;
 using Nallawilli.Services.Interfaces;
 
 namespace Nallawilli.Services.Admin.Implementations

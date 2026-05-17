@@ -1,6 +1,6 @@
 @model CmsSectionContentFormViewModel
 @{
-    var inputTypes = ViewBag.InputTypes as IReadOnlyList<string> ?? Nallawilli.Helpers.CmsInputTypes.All;
+    var inputTypes = ViewBag.InputTypes as IReadOnlyList<string> ?? CmsInputTypes.All;
 }
 
 <div asp-validation-summary="ModelOnly" class="text-danger mb-16"></div>

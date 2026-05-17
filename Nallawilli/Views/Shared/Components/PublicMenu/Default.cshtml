@@ -1,0 +1,8 @@
+@model IReadOnlyList<CmsPublicMenuItemViewModel>
+
+@foreach (var item in Model)
+{
+    <li>
+        <a href="@item.Url" class="sub-menu-item">@item.Title</a>
+    </li>
+}

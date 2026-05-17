@@ -4,7 +4,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Nallawilli.Areas.Admin.ViewModels;
-using Nallawilli.Helpers;
+using Nallawilli.Helpers.Admin;
+using Nallawilli.Helpers.Common;
 using Nallawilli.Options;
 using Nallawilli.Services.Interfaces;
 

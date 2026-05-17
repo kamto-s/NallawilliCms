@@ -1,0 +1,85 @@
+/* Text color */
+.text-primary,
+.pagination li a:hover,
+.pagination .active a,
+.page-next-level .page-next li a:hover,
+.nav-pills .nav-link,
+.accordion .accordion-item .accordion-button:before,
+.accordion .accordion-item .accordion-button:not(.collapsed),
+.about-section .about-content .listing-about i,
+.services.service-two:hover .serv-head,
+.post .post-content a:hover,
+.post .comment-area .media-list .media .media-body a:hover,
+.post .comment-area .media-list .media .media-body .media-heading a:hover,
+.sidebar .widget .post-recent .post-recent-content a:hover,
+.team-member .team-content .member-name a:hover, 
+.team-member .member-detail .member-name a:hover,
+.portfolio-box .work-img .overlay-work .icon i:hover,
+.portfolio-box .work-img .overlay-work .work-content .title:hover a,
+.blog .title:hover, .blog .read-more:hover,
+.footer .footer-list li a:hover {
+    color: #764af1 !important;
+}
+
+
+/* Background color */
+.bg-primary,
+.btn.btn-primary,
+.btn.btn-primary-white:hover, 
+.btn.btn-primary-white:focus, 
+.btn.btn-primary-white:active, 
+.btn.btn-primary-white.active, 
+.btn.btn-primary-white.focus,
+.btn.btn-outline-white:hover, 
+.btn.btn-outline-white:focus, 
+.btn.btn-outline-white:active, 
+.btn.btn-outline-white.active, 
+.btn.btn-outline-white.focus,
+.primary-control-input:checked ~ .primary-control-label::before,
+.progressbox .progress .progress-bar,
+.nav-pills .nav-link.active,
+.nav-pills .show > .nav-link,
+.back-to-top:hover,
+.social-icon li a:hover,
+.footer-icon li a:hover,
+#preloader #status .spinner .cube1, 
+#preloader #status .spinner .cube2,
+#topnav .navbar-toggle.open span:hover,
+.logo .icon,
+.flex-control-paging li a.flex-active,
+.about-section .project-video .play-icon,
+.pagination .page-item .page-link.active,
+.pagination .page-item .page-link:hover,
+.pricing-tab.nav-pills .nav-link.active,
+.pricing-tab.nav-pills .show > .nav-link,
+.sidebar .widget .tagcloud > a:hover,
+
+.container-filter li a:hover, .container-filter li a.active {
+    background-color: #764af1 !important;
+}
+
+/* Border color */
+.btn.btn-primary-white:hover, 
+.btn.btn-primary-white:focus, 
+.btn.btn-primary-white:active, 
+.btn.btn-primary-white.active, 
+.btn.btn-primary-white.focus,
+.primary-control-input:checked ~ .primary-control-label::before,
+.social-icon li a:hover,
+.footer-icon li a:hover,
+#topnav .has-submenu.active .menu-arrow,
+#topnav .navigation-menu > li:hover > .menu-arrow,
+.pricing-tab,
+.
+.container-filter li a:hover, .container-filter li a.active {
+    border-color: #764af1 !important;
+}
+.page-triangle.triangle-primary:after {
+    border-top-color: #764af1;
+  }
+
+
+.team-img img {
+    -webkit-box-shadow: -20px -20px 0px -5px #764af1;
+            box-shadow: -20px -20px 0px -5px #764af1;
+}

@@ -1,37 +1,22 @@
-﻿@using Nallawilli.ViewModels
-@model CmsPublicSectionViewModel
+﻿@model CmsPublicSectionViewModel
+
 @{
-    var eyebrow = Model.Get("eyebrow") ?? Model.Get("subtitle");
+    var subtitle = Model.Get("subtitle");
     var title = Model.Get("title");
-    var backgroundImage = Model.Get("background_image") ?? Model.Get("image");
-    var backgroundImageUrl = string.IsNullOrWhiteSpace(backgroundImage)
-        ? Url.Content("~/assets/public/img/hero-carousel/hero.jpg")
-        : backgroundImage;
+    var bgImage = Model.Get("bg_image");
 }
 
-
-
-@* <section id="hero" class="hero section dark-background">
-    <div id="hero-carousel" class="carousel slide carousel-fade">
-        <div class="carousel-item active hero-overlay">
-            <img src="@backgroundImageUrl" alt="@(title ?? "Nallawilli")">
-            <div class="container">
-                @if (!string.IsNullOrWhiteSpace(eyebrow))
-                {
-                    <p>@eyebrow</p>
-                }
-                @if (!string.IsNullOrWhiteSpace(title))
-                {
-                    if (Model.IsRichText("title"))
-                    {
-                        <div class="hero__title" style="font-size:64px;">@Html.Raw(title)</div>
-                    }
-                    else
-                    {
-                        <h1 style="font-size:64px;">@title</h1>
-                    }
-                }
+<section class="bg-home d-flex align-items-center overflow-hidden position-relative"
+         id="home"
+         style="min-height: 100vh; background-image: url('@Url.Content(@bgImage)'); background-repeat: no-repeat; background-size: cover; background-position: center center;">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 col-md-6 col-sm-12 text-start">
+                <div class="title-heading">
+                    <p class="para-desc text-light">@subtitle</p>
+                    <h1 class="heading mb-4 fw-bold text-light">@title</h1>
+                </div>
             </div>
         </div>
     </div>
-</section> *@
+</section>
